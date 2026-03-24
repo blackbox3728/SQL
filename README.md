@@ -1,5 +1,5 @@
 # 30-Day-SQL-Challenge
-![DALL·E 2024-12-27 14 33 38 - A minimalist banner for a '30 Days of SQL' repository  The design includes clean and bold text '30 Days of SQL' in a modern font, centered within the ](https://github.com/user-attachments/assets/23f186b5-4ea3-4a0a-966b-b72e97e6e611)
+![DALL·E 2024-12-27 14 33 38 - A minimalist banner for a '30 Days of SQL' repository  The design includes clean and bold text '30 Days of SQL' in a modern font, centered within the ]()
 
 
 1. [What Is SQL?](#-what-is-sql)
