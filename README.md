@@ -1,6 +1,4 @@
 # 30-Day-SQL-Challenge
-![DALL·E 2024-12-27 14 33 38 - A minimalist banner for a '30 Days of SQL' repository  The design includes clean and bold text '30 Days of SQL' in a modern font, centered within the ](https://www.bing.com/images/search?view=detailV2&ccid=AKeY2%2fqN&id=D0C137C895839D5CE4FBC11DEB765CBE599B0B50&thid=OIP.AKeY2_qNUVsqBqdybsQGlwHaEK&mediaurl=https%3a%2f%2fstatic.vecteezy.com%2fsystem%2fresources%2fpreviews%2f012%2f614%2f985%2flarge_2x%2fhand-showing-sql-word-and-sql-structured-query-language-code-with-server-room-background-photo.jpg&exph=1960&expw=3484&q=30+days+of+sql+image+jpj&FORM=IRPRST&ck=17A3FB6B06F42C5BA61ED48795D65C06&selectedIndex=147&itb=0)
-
 
 1. [What Is SQL?](#-what-is-sql)
 2. [Why Learn SQL?](#-why-learn-sql)
