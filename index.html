@@ -1,133 +1,549 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RDBMS & PL/SQL — Complete Answer Book</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700;800&display=swap');
-  :root {
-    --bg:#0d1117; --surface:#161b22; --surface2:#1f2937; --border:#30363d;
-    --accent:#58a6ff; --accent2:#3fb950; --accent3:#f78166; --accent4:#d2a8ff; --accent5:#ffa657;
-    --text:#e6edf3; --text2:#8b949e; --text3:#b1bac4; --tag-bg:#1c2232; --out-bg:#0a1628;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;line-height:1.7;}
-  .hero{background:linear-gradient(135deg,#0d1117,#1a2340,#0d1117);border-bottom:1px solid var(--border);padding:48px 40px 36px;text-align:center;position:relative;overflow:hidden;}
-  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(88,166,255,.12),transparent 60%);pointer-events:none;}
-  .hero h1{font-size:2.3rem;font-weight:800;letter-spacing:-1px;background:linear-gradient(90deg,#58a6ff,#d2a8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-  .hero p{color:var(--text2);margin-top:8px;font-size:.93rem;}
-  #toc{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;flex-wrap:wrap;gap:8px;}
-  .tb{background:var(--tag-bg);border:1px solid var(--border);color:var(--text3);padding:4px 12px;border-radius:20px;font-size:.76rem;cursor:pointer;text-decoration:none;transition:all .2s;}
-  .tb:hover{background:var(--accent);color:#000;border-color:var(--accent);}
-  .container{max-width:1080px;margin:0 auto;padding:36px 28px;}
-  /* Tag Reference */
-  .tags-ref{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:26px 30px;margin-bottom:44px;}
-  .tags-ref h2{font-size:1.1rem;font-weight:700;color:var(--accent4);margin-bottom:18px;}
-  .tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
-  .ti{background:var(--tag-bg);border:1px solid var(--border);border-radius:8px;padding:13px 15px;}
-  .tn{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent5);font-weight:600;margin-bottom:4px;}
-  .td{font-size:.8rem;color:var(--text3);line-height:1.55;}
-  .sx{font-family:'JetBrains Mono',monospace;font-size:.73rem;background:#0d1117;color:var(--accent2);padding:2px 5px;border-radius:3px;}
-  /* Slip */
-  .slip{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:38px;overflow:hidden;scroll-margin-top:70px;}
-  .sh{background:linear-gradient(90deg,var(--surface2),var(--surface));padding:17px 26px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-  .sn{background:var(--accent);color:#000;font-weight:800;font-size:.78rem;padding:4px 10px;border-radius:20px;white-space:nowrap;}
-  .st{font-weight:700;font-size:.97rem;}
-  .sr{font-size:.76rem;color:var(--text2);margin-left:auto;background:var(--tag-bg);padding:3px 10px;border-radius:12px;border:1px solid var(--border);}
-  .sb{padding:22px 26px;}
-  .sl{font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin-bottom:9px;}
-  /* Q Block */
-  .qb{border:1px solid var(--border);border-radius:10px;margin-bottom:18px;overflow:hidden;}
-  .qh{background:var(--tag-bg);padding:11px 17px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
-  .badge{font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:12px;}
-  .fn{background:rgba(88,166,255,.15);color:var(--accent);border:1px solid rgba(88,166,255,.3);}
-  .pr{background:rgba(63,185,80,.15);color:var(--accent2);border:1px solid rgba(63,185,80,.3);}
-  .tr{background:rgba(247,129,102,.15);color:var(--accent3);border:1px solid rgba(247,129,102,.3);}
-  .cu{background:rgba(210,168,255,.15);color:var(--accent4);border:1px solid rgba(210,168,255,.3);}
-  .qt{font-size:.88rem;font-weight:600;}
-  .qi{padding:15px 17px;}
-  .ap{background:rgba(88,166,255,.05);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:9px 13px;margin-bottom:13px;font-size:.83rem;color:var(--text3);}
-  .ap strong{color:var(--accent);}
-  .tu{margin-bottom:12px;display:flex;flex-wrap:wrap;gap:5px;align-items:center;}
-  .tul{font-size:.7rem;color:var(--text2);margin-right:3px;}
-  .chip{font-family:'JetBrains Mono',monospace;font-size:.7rem;background:var(--tag-bg);border:1px solid var(--border);color:var(--accent5);padding:2px 8px;border-radius:4px;}
-  pre{background:#0d1424;border:1px solid var(--border);border-radius:8px;padding:15px 17px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.79rem;line-height:1.65;color:#cdd9e5;margin-bottom:11px;}
-  .k{color:#ff7b72;} .f{color:#d2a8ff;} .s{color:#a5d6ff;} .n{color:#79c0ff;} .c{color:#6e7681;font-style:italic;} .t{color:#ffa657;}
-  .ob{background:var(--out-bg);border:1px solid #1e3a5f;border-radius:8px;padding:13px 17px;}
-  .ol{font-size:.69rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#3fb950;margin-bottom:7px;}
-  .ob pre{background:transparent;border:none;padding:0;margin:0;font-size:.79rem;color:#aad8b0;}
-  footer{text-align:center;padding:36px 0 16px;color:var(--text2);font-size:.78rem;border-top:1px solid var(--border);margin-top:16px;}
-  ::-webkit-scrollbar{width:6px;height:6px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
-  @media(max-width:640px){.hero h1{font-size:1.5rem;}.container{padding:18px 14px;}.sb{padding:15px;}.sr{margin-left:0;}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RDBMS & PL/SQL — Complete Answer Book</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700;800&display=swap');
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1f2937;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent2: #3fb950;
+      --accent3: #f78166;
+      --accent4: #d2a8ff;
+      --accent5: #ffa657;
+      --text: #e6edf3;
+      --text2: #8b949e;
+      --text3: #b1bac4;
+      --tag-bg: #1c2232;
+      --out-bg: #0a1628;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Sora', sans-serif;
+      line-height: 1.7;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0d1117, #1a2340, #0d1117);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 40px 36px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(88, 166, 255, .12), transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero h1 {
+      font-size: 2.3rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, #58a6ff, #d2a8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text2);
+      margin-top: 8px;
+      font-size: .93rem;
+    }
+
+    #toc {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 32px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tb {
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      color: var(--text3);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: .76rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s;
+    }
+
+    .tb:hover {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 36px 28px;
+    }
+
+    /* Tag Reference */
+    .tags-ref {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 26px 30px;
+      margin-bottom: 44px;
+    }
+
+    .tags-ref h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent4);
+      margin-bottom: 18px;
+    }
+
+    .tg {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 12px;
+    }
+
+    .ti {
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 13px 15px;
+    }
+
+    .tn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .85rem;
+      color: var(--accent5);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .td {
+      font-size: .8rem;
+      color: var(--text3);
+      line-height: 1.55;
+    }
+
+    .sx {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .73rem;
+      background: #0d1117;
+      color: var(--accent2);
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+
+    /* Slip */
+    .slip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 38px;
+      overflow: hidden;
+      scroll-margin-top: 70px;
+    }
+
+    .sh {
+      background: linear-gradient(90deg, var(--surface2), var(--surface));
+      padding: 17px 26px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .sn {
+      background: var(--accent);
+      color: #000;
+      font-weight: 800;
+      font-size: .78rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .st {
+      font-weight: 700;
+      font-size: .97rem;
+    }
+
+    .sr {
+      font-size: .76rem;
+      color: var(--text2);
+      margin-left: auto;
+      background: var(--tag-bg);
+      padding: 3px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .sb {
+      padding: 22px 26px;
+    }
+
+    .sl {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text2);
+      margin-bottom: 9px;
+    }
+
+    /* Q Block */
+    .qb {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .qh {
+      background: var(--tag-bg);
+      padding: 11px 17px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge {
+      font-size: .7rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    .fn {
+      background: rgba(88, 166, 255, .15);
+      color: var(--accent);
+      border: 1px solid rgba(88, 166, 255, .3);
+    }
+
+    .pr {
+      background: rgba(63, 185, 80, .15);
+      color: var(--accent2);
+      border: 1px solid rgba(63, 185, 80, .3);
+    }
+
+    .tr {
+      background: rgba(247, 129, 102, .15);
+      color: var(--accent3);
+      border: 1px solid rgba(247, 129, 102, .3);
+    }
+
+    .cu {
+      background: rgba(210, 168, 255, .15);
+      color: var(--accent4);
+      border: 1px solid rgba(210, 168, 255, .3);
+    }
+
+    .qt {
+      font-size: .88rem;
+      font-weight: 600;
+    }
+
+    .qi {
+      padding: 15px 17px;
+    }
+
+    .ap {
+      background: rgba(88, 166, 255, .05);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      padding: 9px 13px;
+      margin-bottom: 13px;
+      font-size: .83rem;
+      color: var(--text3);
+    }
+
+    .ap strong {
+      color: var(--accent);
+    }
+
+    .tu {
+      margin-bottom: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .tul {
+      font-size: .7rem;
+      color: var(--text2);
+      margin-right: 3px;
+    }
+
+    .chip {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .7rem;
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      color: var(--accent5);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    pre {
+      background: #0d1424;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 15px 17px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .79rem;
+      line-height: 1.65;
+      color: #cdd9e5;
+      margin-bottom: 11px;
+    }
+
+    .k {
+      color: #ff7b72;
+    }
+
+    .f {
+      color: #d2a8ff;
+    }
+
+    .s {
+      color: #a5d6ff;
+    }
+
+    .n {
+      color: #79c0ff;
+    }
+
+    .c {
+      color: #6e7681;
+      font-style: italic;
+    }
+
+    .t {
+      color: #ffa657;
+    }
+
+    .ob {
+      background: var(--out-bg);
+      border: 1px solid #1e3a5f;
+      border-radius: 8px;
+      padding: 13px 17px;
+    }
+
+    .ol {
+      font-size: .69rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #3fb950;
+      margin-bottom: 7px;
+    }
+
+    .ob pre {
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font-size: .79rem;
+      color: #aad8b0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 36px 0 16px;
+      color: var(--text2);
+      font-size: .78rem;
+      border-top: 1px solid var(--border);
+      margin-top: 16px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    @media(max-width:640px) {
+      .hero h1 {
+        font-size: 1.5rem;
+      }
+
+      .container {
+        padding: 18px 14px;
+      }
+
+      .sb {
+        padding: 15px;
+      }
+
+      .sr {
+        margin-left: 0;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="hero">
-  <h1>RDBMS &amp; PL/SQL — Complete Answer Book</h1>
-  <p>All 20 Slips &nbsp;·&nbsp; 3NF Schema &nbsp;·&nbsp; Approach &nbsp;·&nbsp; Tag Definitions &nbsp;·&nbsp; Code &amp; Sample Output</p>
-</div>
-
-<div id="toc">
-  <a class="tb" href="#tags">📌 Tag Reference</a>
-  <a class="tb" href="#s1">S1: Client–Policy (F+C)</a>
-  <a class="tb" href="#s2">S2: Item–Supplier (F+T)</a>
-  <a class="tb" href="#s3">S3: Newspaper–Cities (T+P)</a>
-  <a class="tb" href="#s4">S4: Client–Policy (P+T)</a>
-  <a class="tb" href="#s5">S5: Library–Book (F+C)</a>
-  <a class="tb" href="#s6">S6: Employee–Investment (P+C)</a>
-  <a class="tb" href="#s7">S7: Bill–Menu (P+T)</a>
-  <a class="tb" href="#s8">S8: Plan–Customer (F+C)</a>
-  <a class="tb" href="#s9">S9: Project–Dept (F+C)</a>
-  <a class="tb" href="#s10">S10: Gym–Member (F+T)</a>
-  <a class="tb" href="#s11">S11: Student–Lab (F+C)</a>
-  <a class="tb" href="#s12">S12: Wholesaler–Product (F+T)</a>
-  <a class="tb" href="#s13">S13: Country–Citizen (F+C)</a>
-  <a class="tb" href="#s14">S14: College–Teacher (P+T)</a>
-  <a class="tb" href="#s15">S15: Driver–Car (F+T)</a>
-  <a class="tb" href="#s16">S16: Game–Player (P+T)</a>
-  <a class="tb" href="#s17">S17: Company–Person (T+F)</a>
-  <a class="tb" href="#s18">S18: Student–Competition (F+C)</a>
-  <a class="tb" href="#s19">S19: Game–Player (F+C)</a>
-  <a class="tb" href="#s20">S20: Driver–Car (P+C)</a>
-</div>
-
-<div class="container">
-
-<!-- ══════════ TAG REFERENCE ══════════ -->
-<div class="tags-ref" id="tags">
-  <h2>📌 PL/SQL Key Tags &amp; Definitions</h2>
-  <div class="tg">
-    <div class="ti"><div class="tn">CREATE TABLE</div><div class="td">DDL to define a table with columns, data types, and constraints (PRIMARY KEY, NOT NULL, CHECK, FOREIGN KEY).</div></div>
-    <div class="ti"><div class="tn">CREATE OR REPLACE FUNCTION</div><div class="td">Named PL/SQL block that <em>returns a single value</em>. Must contain a RETURN clause. Called inside SQL or PL/SQL.</div></div>
-    <div class="ti"><div class="tn">CREATE OR REPLACE PROCEDURE</div><div class="td">Named PL/SQL block that performs actions. Does NOT return a value (uses IN/OUT params). Invoked with EXEC.</div></div>
-    <div class="ti"><div class="tn">CREATE OR REPLACE TRIGGER</div><div class="td">Auto-executed block that fires on DML events (INSERT/UPDATE/DELETE) BEFORE or AFTER the operation.</div></div>
-    <div class="ti"><div class="tn">CURSOR</div><div class="td">Pointer to a result set. Types: Implicit (auto), Explicit (DECLARE/OPEN/FETCH/CLOSE), Parameterized (accepts parameters).</div></div>
-    <div class="ti"><div class="tn">DECLARE … BEGIN … END</div><div class="td">Sections of a PL/SQL anonymous block. DECLARE: variables/cursors. BEGIN: executable code. END: closes the block.</div></div>
-    <div class="ti"><div class="tn">EXCEPTION</div><div class="td">Error-handling section. User-defined exceptions declared in DECLARE and raised with RAISE keyword.</div></div>
-    <div class="ti"><div class="tn">RAISE_APPLICATION_ERROR</div><div class="td">Raises a custom error. Syntax: <span class="sx">RAISE_APPLICATION_ERROR(-20001,'msg')</span>. Error numbers -20001 to -20999.</div></div>
-    <div class="ti"><div class="tn">FOR rec IN cursor LOOP</div><div class="td">Implicit FOR loop — auto opens, fetches, and closes the cursor. Simplest way to iterate a result set.</div></div>
-    <div class="ti"><div class="tn">OPEN / FETCH / CLOSE</div><div class="td">Explicit cursor control. OPEN executes query; FETCH retrieves next row; CLOSE releases cursor resources.</div></div>
-    <div class="ti"><div class="tn">%ROWTYPE / %TYPE</div><div class="td">%ROWTYPE inherits all columns of a table. %TYPE inherits the data type of a single column. Ensures compatibility.</div></div>
-    <div class="ti"><div class="tn">:NEW / :OLD</div><div class="td">Trigger pseudo-records. <strong>:NEW</strong> = value being inserted/updated. <strong>:OLD</strong> = value before update/delete.</div></div>
-    <div class="ti"><div class="tn">BEFORE INSERT OR UPDATE</div><div class="td">Trigger timing — fires BEFORE each INSERT or UPDATE DML statement on the target table.</div></div>
-    <div class="ti"><div class="tn">FOR EACH ROW</div><div class="td">Row-level trigger — fires once per affected row. Required to access :NEW and :OLD pseudo-records.</div></div>
-    <div class="ti"><div class="tn">DBMS_OUTPUT.PUT_LINE</div><div class="td">Built-in procedure to print text output. Enable with <span class="sx">SET SERVEROUTPUT ON</span> in SQL*Plus before running.</div></div>
-    <div class="ti"><div class="tn">SELECT INTO</div><div class="td">PL/SQL SELECT that stores the result into a variable. Raises NO_DATA_FOUND if no row matches; TOO_MANY_ROWS if multiple.</div></div>
+  <div class="hero">
+    <h1>RDBMS &amp; PL/SQL — Complete Answer Book</h1>
+    <p>All 20 Slips &nbsp;·&nbsp; 3NF Schema &nbsp;·&nbsp; Approach &nbsp;·&nbsp; Tag Definitions &nbsp;·&nbsp; Code
+      &amp; Sample Output</p>
   </div>
-</div>
 
-
-<div class="slip" id="s1">
-  <div class="sh">
-    <span class="sn">SLIP 1</span>
-    <span class="st">Client ↔ Policy_info</span>
-    <span class="sr">Many-to-Many</span>
+  <div id="toc">
+    <a class="tb" href="#tags">📌 Tag Reference</a>
+    <a class="tb" href="#s1">S1: Client–Policy (F+C)</a>
+    <a class="tb" href="#s2">S2: Item–Supplier (F+T)</a>
+    <a class="tb" href="#s3">S3: Newspaper–Cities (T+P)</a>
+    <a class="tb" href="#s4">S4: Client–Policy (P+T)</a>
+    <a class="tb" href="#s5">S5: Library–Book (F+C)</a>
+    <a class="tb" href="#s6">S6: Employee–Investment (P+C)</a>
+    <a class="tb" href="#s7">S7: Bill–Menu (P+T)</a>
+    <a class="tb" href="#s8">S8: Plan–Customer (F+C)</a>
+    <a class="tb" href="#s9">S9: Project–Dept (F+C)</a>
+    <a class="tb" href="#s10">S10: Gym–Member (F+T)</a>
+    <a class="tb" href="#s11">S11: Student–Lab (F+C)</a>
+    <a class="tb" href="#s12">S12: Wholesaler–Product (F+T)</a>
+    <a class="tb" href="#s13">S13: Country–Citizen (F+C)</a>
+    <a class="tb" href="#s14">S14: College–Teacher (P+T)</a>
+    <a class="tb" href="#s15">S15: Driver–Car (F+T)</a>
+    <a class="tb" href="#s16">S16: Game–Player (P+T)</a>
+    <a class="tb" href="#s17">S17: Company–Person (T+F)</a>
+    <a class="tb" href="#s18">S18: Student–Competition (F+C)</a>
+    <a class="tb" href="#s19">S19: Game–Player (F+C)</a>
+    <a class="tb" href="#s20">S20: Driver–Car (P+C)</a>
   </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="c">-- Many-to-Many resolved with bridge table</span>
+
+  <div class="container">
+
+    <!-- ══════════ TAG REFERENCE ══════════ -->
+    <div class="tags-ref" id="tags">
+      <h2>📌 PL/SQL Key Tags &amp; Definitions</h2>
+      <div class="tg">
+        <div class="ti">
+          <div class="tn">CREATE TABLE</div>
+          <div class="td">DDL to define a table with columns, data types, and constraints (PRIMARY KEY, NOT NULL, CHECK,
+            FOREIGN KEY).</div>
+        </div>
+        <div class="ti">
+          <div class="tn">CREATE OR REPLACE FUNCTION</div>
+          <div class="td">Named PL/SQL block that <em>returns a single value</em>. Must contain a RETURN clause. Called
+            inside SQL or PL/SQL.</div>
+        </div>
+        <div class="ti">
+          <div class="tn">CREATE OR REPLACE PROCEDURE</div>
+          <div class="td">Named PL/SQL block that performs actions. Does NOT return a value (uses IN/OUT params).
+            Invoked with EXEC.</div>
+        </div>
+        <div class="ti">
+          <div class="tn">CREATE OR REPLACE TRIGGER</div>
+          <div class="td">Auto-executed block that fires on DML events (INSERT/UPDATE/DELETE) BEFORE or AFTER the
+            operation.</div>
+        </div>
+        <div class="ti">
+          <div class="tn">CURSOR</div>
+          <div class="td">Pointer to a result set. Types: Implicit (auto), Explicit (DECLARE/OPEN/FETCH/CLOSE),
+            Parameterized (accepts parameters).</div>
+        </div>
+        <div class="ti">
+          <div class="tn">DECLARE … BEGIN … END</div>
+          <div class="td">Sections of a PL/SQL anonymous block. DECLARE: variables/cursors. BEGIN: executable code. END:
+            closes the block.</div>
+        </div>
+        <div class="ti">
+          <div class="tn">EXCEPTION</div>
+          <div class="td">Error-handling section. User-defined exceptions declared in DECLARE and raised with RAISE
+            keyword.</div>
+        </div>
+        <div class="ti">
+          <div class="tn">RAISE_APPLICATION_ERROR</div>
+          <div class="td">Raises a custom error. Syntax: <span class="sx">RAISE_APPLICATION_ERROR(-20001,'msg')</span>.
+            Error numbers -20001 to -20999.</div>
+        </div>
+        <div class="ti">
+          <div class="tn">FOR rec IN cursor LOOP</div>
+          <div class="td">Implicit FOR loop — auto opens, fetches, and closes the cursor. Simplest way to iterate a
+            result set.</div>
+        </div>
+        <div class="ti">
+          <div class="tn">OPEN / FETCH / CLOSE</div>
+          <div class="td">Explicit cursor control. OPEN executes query; FETCH retrieves next row; CLOSE releases cursor
+            resources.</div>
+        </div>
+        <div class="ti">
+          <div class="tn">%ROWTYPE / %TYPE</div>
+          <div class="td">%ROWTYPE inherits all columns of a table. %TYPE inherits the data type of a single column.
+            Ensures compatibility.</div>
+        </div>
+        <div class="ti">
+          <div class="tn">:NEW / :OLD</div>
+          <div class="td">Trigger pseudo-records. <strong>:NEW</strong> = value being inserted/updated.
+            <strong>:OLD</strong> = value before update/delete.</div>
+        </div>
+        <div class="ti">
+          <div class="tn">BEFORE INSERT OR UPDATE</div>
+          <div class="td">Trigger timing — fires BEFORE each INSERT or UPDATE DML statement on the target table.</div>
+        </div>
+        <div class="ti">
+          <div class="tn">FOR EACH ROW</div>
+          <div class="td">Row-level trigger — fires once per affected row. Required to access :NEW and :OLD
+            pseudo-records.</div>
+        </div>
+        <div class="ti">
+          <div class="tn">DBMS_OUTPUT.PUT_LINE</div>
+          <div class="td">Built-in procedure to print text output. Enable with <span class="sx">SET SERVEROUTPUT
+              ON</span> in SQL*Plus before running.</div>
+        </div>
+        <div class="ti">
+          <div class="tn">SELECT INTO</div>
+          <div class="td">PL/SQL SELECT that stores the result into a variable. Raises NO_DATA_FOUND if no row matches;
+            TOO_MANY_ROWS if multiple.</div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="slip" id="s1">
+      <div class="sh">
+        <span class="sn">SLIP 1</span>
+        <span class="st">Client ↔ Policy_info</span>
+        <span class="sr">Many-to-Many</span>
+      </div>
+      <div class="sb">
+        <div class="sl">3NF Schema</div>
+        <pre><span class="c">-- Many-to-Many resolved with bridge table</span>
 <span class="k">CREATE TABLE</span> Client (
   client_no   <span class="t">NUMBER</span>          <span class="k">PRIMARY KEY</span>,
   client_name <span class="t">VARCHAR2(50)</span>    <span class="k">NOT NULL</span>,
@@ -146,13 +562,17 @@
   policy_no  <span class="t">NUMBER</span>  <span class="k">REFERENCES</span> Policy_info(policy_no),
   <span class="k">PRIMARY KEY</span>(client_no, policy_no)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Return total maturity amount of policies for a particular client</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Accept client_no as IN parameter. JOIN Client_Policy with Policy_info and SUM maturity_amt for that client. Use NVL to handle NULL.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">CREATE FUNCTION</span><span class="chip">RETURN NUMBER</span><span class="chip">SELECT INTO</span><span class="chip">JOIN</span><span class="chip">SUM</span><span class="chip">NVL</span></div>
-    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">get_total_maturity</span>(p_client <span class="k">IN</span> Client.client_no<span class="k">%TYPE</span>)
+
+        <div class="qb">
+          <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Return total maturity amount of
+              policies for a particular client</span></div>
+          <div class="qi">
+            <div class="ap"><strong>Approach:</strong> Accept client_no as IN parameter. JOIN Client_Policy with
+              Policy_info and SUM maturity_amt for that client. Use NVL to handle NULL.</div>
+            <div class="tu"><span class="tul">Tags used:</span><span class="chip">CREATE FUNCTION</span><span
+                class="chip">RETURN NUMBER</span><span class="chip">SELECT INTO</span><span
+                class="chip">JOIN</span><span class="chip">SUM</span><span class="chip">NVL</span></div>
+            <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">get_total_maturity</span>(p_client <span class="k">IN</span> Client.client_no<span class="k">%TYPE</span>)
 <span class="k">RETURN NUMBER IS</span>
   v_total <span class="t">NUMBER</span> := 0;
 <span class="k">BEGIN</span>
@@ -171,16 +591,23 @@
   <span class="f">DBMS_OUTPUT.PUT_LINE</span>(<span class="s">'Total Maturity Amount: '</span> || v);
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Total Maturity Amount: 750000</pre></div>
-  </div>
-</div>
+            <div class="ob">
+              <div class="ol">▶ Sample Output</div>
+              <pre>Total Maturity Amount: 750000</pre>
+            </div>
+          </div>
+        </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display policy date-wise client details</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Explicit cursor JOINs Client, Client_Policy, and Policy_info ordered by policy_date. FOR...IN loop prints each row.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">CURSOR</span><span class="chip">FOR..IN LOOP</span><span class="chip">JOIN</span><span class="chip">ORDER BY</span><span class="chip">DBMS_OUTPUT</span></div>
-    <pre><span class="k">DECLARE</span>
+        <div class="qb">
+          <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display policy date-wise client
+              details</span></div>
+          <div class="qi">
+            <div class="ap"><strong>Approach:</strong> Explicit cursor JOINs Client, Client_Policy, and Policy_info
+              ordered by policy_date. FOR...IN loop prints each row.</div>
+            <div class="tu"><span class="tul">Tags used:</span><span class="chip">CURSOR</span><span
+                class="chip">FOR..IN LOOP</span><span class="chip">JOIN</span><span class="chip">ORDER BY</span><span
+                class="chip">DBMS_OUTPUT</span></div>
+            <pre><span class="k">DECLARE</span>
   <span class="k">CURSOR</span> c_datewise <span class="k">IS</span>
     <span class="k">SELECT</span> c.client_name, p.policy_no, p.policy_desc,
            p.prem_amt, p.maturity_amt, p.policy_date
@@ -200,25 +627,28 @@
   <span class="k">END LOOP</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>--- Policy Date-Wise Client Details ---
+            <div class="ob">
+              <div class="ol">▶ Sample Output</div>
+              <pre>--- Policy Date-Wise Client Details ---
 Date: 01-JAN-20 | Client: Amit Shah   | Policy#: 201 | Prem: 5000  | Maturity: 100000
 Date: 15-MAR-21 | Client: Priya Mehta | Policy#: 202 | Prem: 8000  | Maturity: 200000
-Date: 10-JUL-22 | Client: Rahul Desai | Policy#: 203 | Prem: 12000 | Maturity: 450000</pre></div>
-  </div>
-</div>
+Date: 10-JUL-22 | Client: Rahul Desai | Policy#: 203 | Prem: 12000 | Maturity: 450000</pre>
+            </div>
+          </div>
+        </div>
 
-  </div>
-</div>
+      </div>
+    </div>
 
-<div class="slip" id="s2">
-  <div class="sh">
-    <span class="sn">SLIP 2</span>
-    <span class="st">Item ↔ Supplier</span>
-    <span class="sr">Many-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Item (
+    <div class="slip" id="s2">
+      <div class="sh">
+        <span class="sn">SLIP 2</span>
+        <span class="st">Item ↔ Supplier</span>
+        <span class="sr">Many-to-Many</span>
+      </div>
+      <div class="sb">
+        <div class="sl">3NF Schema</div>
+        <pre><span class="k">CREATE TABLE</span> Item (
   itemno   <span class="t">NUMBER</span>        <span class="k">PRIMARY KEY</span>,
   itemname <span class="t">VARCHAR2(50)</span>  <span class="k">NOT NULL</span>
 );
@@ -236,13 +666,17 @@ Date: 10-JUL-22 | Client: Rahul Desai | Policy#: 203 | Prem: 12000 | Maturity: 4
   quantity    <span class="t">NUMBER</span> <span class="k">CHECK</span>(quantity &gt; 0),
   <span class="k">PRIMARY KEY</span>(itemno, supplier_no)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Return total number of suppliers of a particular item</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Accept itemno as IN parameter. Use COUNT(*) on Item_Supplier WHERE itemno matches. Return the count.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">CREATE FUNCTION</span><span class="chip">SELECT INTO</span><span class="chip">COUNT(*)</span><span class="chip">RETURN NUMBER</span><span class="chip">IN parameter</span></div>
-    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">count_suppliers</span>(p_itemno <span class="k">IN</span> Item.itemno<span class="k">%TYPE</span>)
+
+        <div class="qb">
+          <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Return total number of suppliers of a
+              particular item</span></div>
+          <div class="qi">
+            <div class="ap"><strong>Approach:</strong> Accept itemno as IN parameter. Use COUNT(*) on Item_Supplier
+              WHERE itemno matches. Return the count.</div>
+            <div class="tu"><span class="tul">Tags used:</span><span class="chip">CREATE FUNCTION</span><span
+                class="chip">SELECT INTO</span><span class="chip">COUNT(*)</span><span class="chip">RETURN
+                NUMBER</span><span class="chip">IN parameter</span></div>
+            <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">count_suppliers</span>(p_itemno <span class="k">IN</span> Item.itemno<span class="k">%TYPE</span>)
 <span class="k">RETURN NUMBER IS</span>
   v_count <span class="t">NUMBER</span>;
 <span class="k">BEGIN</span>
@@ -256,16 +690,24 @@ Date: 10-JUL-22 | Client: Rahul Desai | Policy#: 203 | Prem: 12000 | Maturity: 4
   <span class="f">DBMS_OUTPUT.PUT_LINE</span>(<span class="s">'Supplier Count: '</span> || <span class="f">count_suppliers</span>(10));
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Supplier Count: 4</pre></div>
-  </div>
-</div>
+            <div class="ob">
+              <div class="ol">▶ Sample Output</div>
+              <pre>Supplier Count: 4</pre>
+            </div>
+          </div>
+        </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">Fire BEFORE INSERT or UPDATE — rate and quantity must be > 0</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> BEFORE INSERT OR UPDATE FOR EACH ROW on Item_Supplier. Check :NEW.rate and :NEW.quantity. If either ≤ 0, raise user-defined exception.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span class="chip">:NEW</span><span class="chip">RAISE_APPLICATION_ERROR</span><span class="chip">User-defined EXCEPTION</span></div>
-    <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_validate_item_supplier
+        <div class="qb">
+          <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">Fire BEFORE INSERT or UPDATE — rate and
+              quantity must be > 0</span></div>
+          <div class="qi">
+            <div class="ap"><strong>Approach:</strong> BEFORE INSERT OR UPDATE FOR EACH ROW on Item_Supplier. Check
+              :NEW.rate and :NEW.quantity. If either ≤ 0, raise user-defined exception.</div>
+            <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span
+                class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span
+                class="chip">:NEW</span><span class="chip">RAISE_APPLICATION_ERROR</span><span class="chip">User-defined
+                EXCEPTION</span></div>
+            <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_validate_item_supplier
 <span class="k">BEFORE INSERT OR UPDATE ON</span> Item_Supplier
 <span class="k">FOR EACH ROW</span>
 <span class="k">DECLARE</span>
@@ -282,23 +724,26 @@ Date: 10-JUL-22 | Client: Rahul Desai | Policy#: 203 | Prem: 12000 | Maturity: 4
 /
 <span class="c">-- Test (will raise error):</span>
 <span class="k">INSERT INTO</span> Item_Supplier <span class="k">VALUES</span>(<span class="n">1</span>,<span class="n">2</span>,-<span class="n">50</span>,<span class="n">0</span>);</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>ORA-20001: Error: Rate and Quantity must be greater than zero!
-ORA-06512: at "SCOTT.TRG_VALIDATE_ITEM_SUPPLIER", line 7</pre></div>
-  </div>
-</div>
+            <div class="ob">
+              <div class="ol">▶ Sample Output</div>
+              <pre>ORA-20001: Error: Rate and Quantity must be greater than zero!
+ORA-06512: at "SCOTT.TRG_VALIDATE_ITEM_SUPPLIER", line 7</pre>
+            </div>
+          </div>
+        </div>
 
-  </div>
-</div>
+      </div>
+    </div>
 
-<div class="slip" id="s3">
-  <div class="sh">
-    <span class="sn">SLIP 3</span>
-    <span class="st">Newspaper ↔ Cities</span>
-    <span class="sr">Many-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Newspaper (
+    <div class="slip" id="s3">
+      <div class="sh">
+        <span class="sn">SLIP 3</span>
+        <span class="st">Newspaper ↔ Cities</span>
+        <span class="sr">Many-to-Many</span>
+      </div>
+      <div class="sb">
+        <div class="sl">3NF Schema</div>
+        <pre><span class="k">CREATE TABLE</span> Newspaper (
   name      <span class="t">VARCHAR2(50)</span>  <span class="k">PRIMARY KEY</span>,
   language  <span class="t">VARCHAR2(30)</span>,
   publisher <span class="t">VARCHAR2(50)</span>,
@@ -315,13 +760,18 @@ ORA-06512: at "SCOTT.TRG_VALIDATE_ITEM_SUPPLIER", line 7</pre></div>
   daily_required <span class="t">NUMBER</span>,
   <span class="k">PRIMARY KEY</span>(name, pincode)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT on Cities — pincode must be exactly 6 digits</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> BEFORE INSERT FOR EACH ROW on Cities. Convert :NEW.pincode to string, check LENGTH = 6. If not, raise user-defined error.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span class="chip">BEFORE INSERT</span><span class="chip">FOR EACH ROW</span><span class="chip">LENGTH()</span><span class="chip">TO_CHAR()</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
-    <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_pincode_check
+
+        <div class="qb">
+          <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT on Cities — pincode must
+              be exactly 6 digits</span></div>
+          <div class="qi">
+            <div class="ap"><strong>Approach:</strong> BEFORE INSERT FOR EACH ROW on Cities. Convert :NEW.pincode to
+              string, check LENGTH = 6. If not, raise user-defined error.</div>
+            <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span
+                class="chip">BEFORE INSERT</span><span class="chip">FOR EACH ROW</span><span
+                class="chip">LENGTH()</span><span class="chip">TO_CHAR()</span><span
+                class="chip">RAISE_APPLICATION_ERROR</span></div>
+            <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_pincode_check
 <span class="k">BEFORE INSERT ON</span> Cities
 <span class="k">FOR EACH ROW</span>
 <span class="k">DECLARE</span>
@@ -338,16 +788,23 @@ ORA-06512: at "SCOTT.TRG_VALIDATE_ITEM_SUPPLIER", line 7</pre></div>
 /
 <span class="c">-- Test (will fail):</span>
 <span class="k">INSERT INTO</span> Cities <span class="k">VALUES</span>(<span class="n">4110</span>,<span class="s">'Pune'</span>,<span class="s">'Maharashtra'</span>);</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>ORA-20002: Error: Pincode must be exactly 6 digits!</pre></div>
-  </div>
-</div>
+            <div class="ob">
+              <div class="ol">▶ Sample Output</div>
+              <pre>ORA-20002: Error: Pincode must be exactly 6 digits!</pre>
+            </div>
+          </div>
+        </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge pr">PROCEDURE</span><span class="qt">Calculate city-wise total cost of each newspaper</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Cursor JOINs Cities, Newspaper_City, and Newspaper. GROUP BY city, compute SUM(cost × daily_required). Print results.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">PROCEDURE</span><span class="chip">CURSOR</span><span class="chip">FOR LOOP</span><span class="chip">GROUP BY</span><span class="chip">SUM</span><span class="chip">RPAD</span></div>
-    <pre><span class="k">CREATE OR REPLACE PROCEDURE</span> <span class="f">city_newspaper_cost</span> <span class="k">IS</span>
+        <div class="qb">
+          <div class="qh"><span class="badge pr">PROCEDURE</span><span class="qt">Calculate city-wise total cost of each
+              newspaper</span></div>
+          <div class="qi">
+            <div class="ap"><strong>Approach:</strong> Cursor JOINs Cities, Newspaper_City, and Newspaper. GROUP BY
+              city, compute SUM(cost × daily_required). Print results.</div>
+            <div class="tu"><span class="tul">Tags used:</span><span class="chip">PROCEDURE</span><span
+                class="chip">CURSOR</span><span class="chip">FOR LOOP</span><span class="chip">GROUP BY</span><span
+                class="chip">SUM</span><span class="chip">RPAD</span></div>
+            <pre><span class="k">CREATE OR REPLACE PROCEDURE</span> <span class="f">city_newspaper_cost</span> <span class="k">IS</span>
   <span class="k">CURSOR</span> c_cc <span class="k">IS</span>
     <span class="k">SELECT</span> ci.city,
            <span class="f">SUM</span>(n.cost * nc.daily_required) <span class="k">AS</span> total_cost
@@ -365,33 +822,41 @@ ORA-06512: at "SCOTT.TRG_VALIDATE_ITEM_SUPPLIER", line 7</pre></div>
 <span class="k">END</span>;
 /
 <span class="k">EXEC</span> <span class="f">city_newspaper_cost</span>;</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>City                Total Cost
+            <div class="ob">
+              <div class="ol">▶ Sample Output</div>
+              <pre>City                Total Cost
 ------------------------------
 Mumbai              12500
 Nagpur               6200
-Pune                 8700</pre></div>
-  </div>
-</div>
+Pune                 8700</pre>
+            </div>
+          </div>
+        </div>
 
-  </div>
-</div>
+      </div>
+    </div>
 
-<div class="slip" id="s4">
-  <div class="sh">
-    <span class="sn">SLIP 4</span>
-    <span class="st">Client ↔ Policy_info</span>
-    <span class="sr">Many-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="c">-- Same tables as Slip 1: Client, Policy_info, Client_Policy</span></pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge pr">PROCEDURE</span><span class="qt">Display all policy details having premium amount < 5000</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Cursor SELECTs from Policy_info WHERE prem_amt < 5000 ordered by prem_amt. Loop and display using DBMS_OUTPUT.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">PROCEDURE</span><span class="chip">CURSOR</span><span class="chip">FOR LOOP</span><span class="chip">WHERE clause</span><span class="chip">ORDER BY</span></div>
-    <pre><span class="k">CREATE OR REPLACE PROCEDURE</span> <span class="f">low_premium_policies</span> <span class="k">IS</span>
+    <div class="slip" id="s4">
+      <div class="sh">
+        <span class="sn">SLIP 4</span>
+        <span class="st">Client ↔ Policy_info</span>
+        <span class="sr">Many-to-Many</span>
+      </div>
+      <div class="sb">
+        <div class="sl">3NF Schema</div>
+        <pre><span class="c">-- Same tables as Slip 1: Client, Policy_info, Client_Policy</span></pre>
+
+        <div class="qb">
+          <div class="qh"><span class="badge pr">PROCEDURE</span><span class="qt">Display all policy details having
+              premium amount < 5000</span>
+          </div>
+          <div class="qi">
+            <div class="ap"><strong>Approach:</strong> Cursor SELECTs from Policy_info WHERE prem_amt < 5000 ordered by
+                prem_amt. Loop and display using DBMS_OUTPUT.</div>
+                <div class="tu"><span class="tul">Tags used:</span><span class="chip">PROCEDURE</span><span
+                    class="chip">CURSOR</span><span class="chip">FOR LOOP</span><span class="chip">WHERE
+                    clause</span><span class="chip">ORDER BY</span></div>
+                <pre><span class="k">CREATE OR REPLACE PROCEDURE</span> <span class="f">low_premium_policies</span> <span class="k">IS</span>
   <span class="k">CURSOR</span> c_lp <span class="k">IS</span>
     <span class="k">SELECT</span> policy_no, policy_desc, prem_amt,
            maturity_amt, policy_date
@@ -410,19 +875,26 @@ Pune                 8700</pre></div>
 <span class="k">END</span>;
 /
 <span class="k">EXEC</span> <span class="f">low_premium_policies</span>;</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Policies with Premium < 5000:
+                <div class="ob">
+                  <div class="ol">▶ Sample Output</div>
+                  <pre>Policies with Premium < 5000:
 PolicyNo: 201  Desc: Term Life   Prem: 2000  Maturity: 60000
 PolicyNo: 205  Desc: Endowment   Prem: 3500  Maturity: 90000
-PolicyNo: 208  Desc: Whole Life  Prem: 4500  Maturity: 150000</pre></div>
-  </div>
-</div>
+PolicyNo: 208  Desc: Whole Life  Prem: 4500  Maturity: 150000</pre>
+                </div>
+            </div>
+          </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE — maturity_amt must not be less than prem_amt</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> BEFORE INSERT OR UPDATE FOR EACH ROW on Policy_info. Check :NEW.maturity_amt < :NEW.prem_amt and raise user-defined exception.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span class="chip">:NEW</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
-    <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_policy_check
+          <div class="qb">
+            <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE — maturity_amt
+                must not be less than prem_amt</span></div>
+            <div class="qi">
+              <div class="ap"><strong>Approach:</strong> BEFORE INSERT OR UPDATE FOR EACH ROW on Policy_info. Check
+                :NEW.maturity_amt < :NEW.prem_amt and raise user-defined exception.</div>
+                  <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span
+                      class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span
+                      class="chip">:NEW</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
+                  <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_policy_check
 <span class="k">BEFORE INSERT OR UPDATE ON</span> Policy_info
 <span class="k">FOR EACH ROW</span>
 <span class="k">DECLARE</span>
@@ -437,22 +909,25 @@ PolicyNo: 208  Desc: Whole Life  Prem: 4500  Maturity: 150000</pre></div>
       <span class="s">'Error: Maturity amount cannot be less than Premium amount!'</span>);
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>ORA-20003: Error: Maturity amount cannot be less than Premium amount!</pre></div>
-  </div>
-</div>
+                  <div class="ob">
+                    <div class="ol">▶ Sample Output</div>
+                    <pre>ORA-20003: Error: Maturity amount cannot be less than Premium amount!</pre>
+                  </div>
+              </div>
+            </div>
 
-  </div>
-</div>
+          </div>
+        </div>
 
-<div class="slip" id="s5">
-  <div class="sh">
-    <span class="sn">SLIP 5</span>
-    <span class="st">Library → Book</span>
-    <span class="sr">One-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Library (
+        <div class="slip" id="s5">
+          <div class="sh">
+            <span class="sn">SLIP 5</span>
+            <span class="st">Library → Book</span>
+            <span class="sr">One-to-Many</span>
+          </div>
+          <div class="sb">
+            <div class="sl">3NF Schema</div>
+            <pre><span class="k">CREATE TABLE</span> Library (
   Lno         <span class="t">NUMBER</span>        <span class="k">PRIMARY KEY</span>,
   Lname       <span class="t">VARCHAR2(50)</span>,
   Location    <span class="t">VARCHAR2(50)</span>,
@@ -467,13 +942,17 @@ PolicyNo: 208  Desc: Whole Life  Prem: 4500  Maturity: 150000</pre></div>
   publication <span class="t">VARCHAR2(50)</span>,
   Lno         <span class="t">NUMBER</span>        <span class="k">REFERENCES</span> Library(Lno)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Accept publication name and return total price of its books</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Accept publication as IN parameter. SUM(Price) FROM Book WHERE UPPER(publication) = UPPER(param). Return total using NVL for null-safety.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span class="chip">SELECT INTO</span><span class="chip">SUM</span><span class="chip">NVL</span><span class="chip">UPPER()</span><span class="chip">RETURN NUMBER</span></div>
-    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">total_price_by_pub</span>(p_pub <span class="k">IN</span> Book.publication<span class="k">%TYPE</span>)
+
+            <div class="qb">
+              <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Accept publication name and return
+                  total price of its books</span></div>
+              <div class="qi">
+                <div class="ap"><strong>Approach:</strong> Accept publication as IN parameter. SUM(Price) FROM Book
+                  WHERE UPPER(publication) = UPPER(param). Return total using NVL for null-safety.</div>
+                <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span
+                    class="chip">SELECT INTO</span><span class="chip">SUM</span><span class="chip">NVL</span><span
+                    class="chip">UPPER()</span><span class="chip">RETURN NUMBER</span></div>
+                <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">total_price_by_pub</span>(p_pub <span class="k">IN</span> Book.publication<span class="k">%TYPE</span>)
 <span class="k">RETURN NUMBER IS</span>
   v_total <span class="t">NUMBER</span>;
 <span class="k">BEGIN</span>
@@ -487,16 +966,24 @@ PolicyNo: 208  Desc: Whole Life  Prem: 4500  Maturity: 150000</pre></div>
   <span class="f">DBMS_OUTPUT.PUT_LINE</span>(<span class="s">'Total Price (Pearson): '</span> || <span class="f">total_price_by_pub</span>(<span class="s">'Pearson'</span>));
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Total Price (Pearson): 2850</pre></div>
-  </div>
-</div>
+                <div class="ob">
+                  <div class="ol">▶ Sample Output</div>
+                  <pre>Total Price (Pearson): 2850</pre>
+                </div>
+              </div>
+            </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display library-wise book details using Parameterized Cursor</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Outer loop fetches each library. For each Lno, a parameterized cursor is opened to fetch its books. OPEN/FETCH/CLOSE pattern used.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">PARAMETERIZED CURSOR</span><span class="chip">OPEN cursor(param)</span><span class="chip">FETCH</span><span class="chip">CLOSE</span><span class="chip">%ROWTYPE</span><span class="chip">Nested LOOP</span></div>
-    <pre><span class="k">DECLARE</span>
+            <div class="qb">
+              <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display library-wise book details
+                  using Parameterized Cursor</span></div>
+              <div class="qi">
+                <div class="ap"><strong>Approach:</strong> Outer loop fetches each library. For each Lno, a
+                  parameterized cursor is opened to fetch its books. OPEN/FETCH/CLOSE pattern used.</div>
+                <div class="tu"><span class="tul">Tags used:</span><span class="chip">PARAMETERIZED CURSOR</span><span
+                    class="chip">OPEN cursor(param)</span><span class="chip">FETCH</span><span
+                    class="chip">CLOSE</span><span class="chip">%ROWTYPE</span><span class="chip">Nested LOOP</span>
+                </div>
+                <pre><span class="k">DECLARE</span>
   <span class="k">CURSOR</span> c_lib <span class="k">IS</span>
     <span class="k">SELECT</span> Lno, Lname <span class="k">FROM</span> Library;
 
@@ -523,26 +1010,29 @@ PolicyNo: 208  Desc: Whole Life  Prem: 4500  Maturity: 150000</pre></div>
   <span class="k">END LOOP</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>=== Library: City Central Library ===
+                <div class="ob">
+                  <div class="ol">▶ Sample Output</div>
+                  <pre>=== Library: City Central Library ===
   Book: DBMS Concepts  | Author: Navathe      | Price: 550 | Pub: Pearson
   Book: Data Structures | Author: Tanenbaum   | Price: 480 | Pub: PHI
 === Library: District Library ===
-  Book: OS Principles  | Author: Silberschatz | Price: 620 | Pub: Wiley</pre></div>
-  </div>
-</div>
+  Book: OS Principles  | Author: Silberschatz | Price: 620 | Pub: Wiley</pre>
+                </div>
+              </div>
+            </div>
 
-  </div>
-</div>
+          </div>
+        </div>
 
-<div class="slip" id="s6">
-  <div class="sh">
-    <span class="sn">SLIP 6</span>
-    <span class="st">Employee → Investment</span>
-    <span class="sr">One-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Employee (
+        <div class="slip" id="s6">
+          <div class="sh">
+            <span class="sn">SLIP 6</span>
+            <span class="st">Employee → Investment</span>
+            <span class="sr">One-to-Many</span>
+          </div>
+          <div class="sb">
+            <div class="sl">3NF Schema</div>
+            <pre><span class="k">CREATE TABLE</span> Employee (
   emp_id   <span class="t">NUMBER</span>        <span class="k">PRIMARY KEY</span>,
   emp_name <span class="t">VARCHAR2(50)</span>  <span class="k">NOT NULL</span>,
   address  <span class="t">VARCHAR2(100)</span>
@@ -554,13 +1044,18 @@ PolicyNo: 208  Desc: Whole Life  Prem: 4500  Maturity: 150000</pre></div>
   inv_amount <span class="t">NUMBER</span>        <span class="k">CHECK</span>(inv_amount &gt; 0),
   emp_id     <span class="t">NUMBER</span>        <span class="k">REFERENCES</span> Employee(emp_id)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge pr">PROCEDURE</span><span class="qt">Display employees who invested in 'Mutual Fund'</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> JOIN Employee with Investment WHERE UPPER(inv_name) = 'MUTUAL FUND'. Use DISTINCT to avoid duplicates. Loop and print.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">PROCEDURE</span><span class="chip">CURSOR FOR LOOP</span><span class="chip">JOIN</span><span class="chip">UPPER()</span><span class="chip">DISTINCT</span><span class="chip">DBMS_OUTPUT</span></div>
-    <pre><span class="k">CREATE OR REPLACE PROCEDURE</span> <span class="f">mutual_fund_investors</span> <span class="k">IS</span>
+
+            <div class="qb">
+              <div class="qh"><span class="badge pr">PROCEDURE</span><span class="qt">Display employees who invested in
+                  'Mutual Fund'</span></div>
+              <div class="qi">
+                <div class="ap"><strong>Approach:</strong> JOIN Employee with Investment WHERE UPPER(inv_name) = 'MUTUAL
+                  FUND'. Use DISTINCT to avoid duplicates. Loop and print.</div>
+                <div class="tu"><span class="tul">Tags used:</span><span class="chip">PROCEDURE</span><span
+                    class="chip">CURSOR FOR LOOP</span><span class="chip">JOIN</span><span
+                    class="chip">UPPER()</span><span class="chip">DISTINCT</span><span class="chip">DBMS_OUTPUT</span>
+                </div>
+                <pre><span class="k">CREATE OR REPLACE PROCEDURE</span> <span class="f">mutual_fund_investors</span> <span class="k">IS</span>
   <span class="k">CURSOR</span> c_mf <span class="k">IS</span>
     <span class="k">SELECT DISTINCT</span> e.emp_id, e.emp_name, e.address,
                     i.inv_amount, i.inv_date
@@ -579,18 +1074,24 @@ PolicyNo: 208  Desc: Whole Life  Prem: 4500  Maturity: 150000</pre></div>
 <span class="k">END</span>;
 /
 <span class="k">EXEC</span> <span class="f">mutual_fund_investors</span>;</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Employees invested in Mutual Fund:
+                <div class="ob">
+                  <div class="ol">▶ Sample Output</div>
+                  <pre>Employees invested in Mutual Fund:
 ID: 1001 Name: Suresh Patil  Amt: 25000 Date: 10-JAN-23
-ID: 1005 Name: Neha Joshi    Amt: 50000 Date: 20-MAR-23</pre></div>
-  </div>
-</div>
+ID: 1005 Name: Neha Joshi    Amt: 50000 Date: 20-MAR-23</pre>
+                </div>
+              </div>
+            </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display date-wise investment details</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Explicit cursor JOINs Employee and Investment, ordered by inv_date. FOR loop prints each record.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">CURSOR</span><span class="chip">FOR LOOP</span><span class="chip">JOIN</span><span class="chip">ORDER BY</span></div>
-    <pre><span class="k">DECLARE</span>
+            <div class="qb">
+              <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display date-wise investment
+                  details</span></div>
+              <div class="qi">
+                <div class="ap"><strong>Approach:</strong> Explicit cursor JOINs Employee and Investment, ordered by
+                  inv_date. FOR loop prints each record.</div>
+                <div class="tu"><span class="tul">Tags used:</span><span class="chip">CURSOR</span><span
+                    class="chip">FOR LOOP</span><span class="chip">JOIN</span><span class="chip">ORDER BY</span></div>
+                <pre><span class="k">DECLARE</span>
   <span class="k">CURSOR</span> c_dw <span class="k">IS</span>
     <span class="k">SELECT</span> i.inv_date, i.inv_no, i.inv_name,
            i.inv_amount, e.emp_name
@@ -607,25 +1108,28 @@ ID: 1005 Name: Neha Joshi    Amt: 50000 Date: 20-MAR-23</pre></div>
   <span class="k">END LOOP</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>--- Date-Wise Investment Details ---
+                <div class="ob">
+                  <div class="ol">▶ Sample Output</div>
+                  <pre>--- Date-Wise Investment Details ---
 05-JAN-23 | Fixed Deposit | Rs.10000 | Emp: Ramesh Kumar
 10-JAN-23 | Mutual Fund   | Rs.25000 | Emp: Suresh Patil
-15-FEB-23 | Stocks        | Rs.15000 | Emp: Anita Singh</pre></div>
-  </div>
-</div>
+15-FEB-23 | Stocks        | Rs.15000 | Emp: Anita Singh</pre>
+                </div>
+              </div>
+            </div>
 
-  </div>
-</div>
+          </div>
+        </div>
 
-<div class="slip" id="s7">
-  <div class="sh">
-    <span class="sn">SLIP 7</span>
-    <span class="st">Bill ↔ Menu</span>
-    <span class="sr">Many-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Bill (
+        <div class="slip" id="s7">
+          <div class="sh">
+            <span class="sn">SLIP 7</span>
+            <span class="st">Bill ↔ Menu</span>
+            <span class="sr">Many-to-Many</span>
+          </div>
+          <div class="sb">
+            <div class="sl">3NF Schema</div>
+            <pre><span class="k">CREATE TABLE</span> Bill (
   billno  <span class="t">NUMBER</span>        <span class="k">PRIMARY KEY</span>,
   day     <span class="t">VARCHAR2(15)</span>,
   tableno <span class="t">NUMBER</span>,
@@ -642,13 +1146,17 @@ ID: 1005 Name: Neha Joshi    Amt: 50000 Date: 20-MAR-23</pre></div>
   quantity <span class="t">NUMBER</span>,
   <span class="k">PRIMARY KEY</span>(billno, dish_no)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge pr">PROCEDURE</span><span class="qt">Display menu items priced 200–500 ordered on Saturday</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> JOIN Bill_Menu with Menu and Bill. Filter WHERE price BETWEEN 200 AND 500 AND UPPER(day) = 'SATURDAY'. Display via cursor loop.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">PROCEDURE</span><span class="chip">CURSOR</span><span class="chip">BETWEEN</span><span class="chip">JOIN</span><span class="chip">UPPER()</span><span class="chip">FOR LOOP</span></div>
-    <pre><span class="k">CREATE OR REPLACE PROCEDURE</span> <span class="f">saturday_menu</span> <span class="k">IS</span>
+
+            <div class="qb">
+              <div class="qh"><span class="badge pr">PROCEDURE</span><span class="qt">Display menu items priced 200–500
+                  ordered on Saturday</span></div>
+              <div class="qi">
+                <div class="ap"><strong>Approach:</strong> JOIN Bill_Menu with Menu and Bill. Filter WHERE price BETWEEN
+                  200 AND 500 AND UPPER(day) = 'SATURDAY'. Display via cursor loop.</div>
+                <div class="tu"><span class="tul">Tags used:</span><span class="chip">PROCEDURE</span><span
+                    class="chip">CURSOR</span><span class="chip">BETWEEN</span><span class="chip">JOIN</span><span
+                    class="chip">UPPER()</span><span class="chip">FOR LOOP</span></div>
+                <pre><span class="k">CREATE OR REPLACE PROCEDURE</span> <span class="f">saturday_menu</span> <span class="k">IS</span>
   <span class="k">CURSOR</span> c_sat <span class="k">IS</span>
     <span class="k">SELECT</span> m.dish_no, m.dish_desc, m.price, bm.quantity
       <span class="k">FROM</span> Menu m
@@ -667,19 +1175,26 @@ ID: 1005 Name: Neha Joshi    Amt: 50000 Date: 20-MAR-23</pre></div>
 <span class="k">END</span>;
 /
 <span class="k">EXEC</span> <span class="f">saturday_menu</span>;</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Saturday Menu (Price Rs.200-500):
+                <div class="ob">
+                  <div class="ol">▶ Sample Output</div>
+                  <pre>Saturday Menu (Price Rs.200-500):
 Dish: Paneer Butter Masala  Rs.350 Qty: 2
 Dish: Dal Makhani           Rs.250 Qty: 3
-Dish: Biryani               Rs.450 Qty: 1</pre></div>
-  </div>
-</div>
+Dish: Biryani               Rs.450 Qty: 1</pre>
+                </div>
+              </div>
+            </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE on Menu — price must be > 0</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Row-level trigger on Menu table. Check :NEW.price <= 0 and raise application error immediately.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span class="chip">:NEW.price</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
-    <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_menu_price
+            <div class="qb">
+              <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE on Menu —
+                  price must be > 0</span></div>
+              <div class="qi">
+                <div class="ap"><strong>Approach:</strong> Row-level trigger on Menu table. Check :NEW.price <= 0 and
+                    raise application error immediately.</div>
+                    <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span
+                        class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span
+                        class="chip">:NEW.price</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
+                    <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_menu_price
 <span class="k">BEFORE INSERT OR UPDATE ON</span> Menu
 <span class="k">FOR EACH ROW</span>
 <span class="k">BEGIN</span>
@@ -689,22 +1204,25 @@ Dish: Biryani               Rs.450 Qty: 1</pre></div>
   <span class="k">END IF</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>ORA-20004: Error: Dish price must be greater than zero!</pre></div>
-  </div>
-</div>
+                    <div class="ob">
+                      <div class="ol">▶ Sample Output</div>
+                      <pre>ORA-20004: Error: Dish price must be greater than zero!</pre>
+                    </div>
+                </div>
+              </div>
 
-  </div>
-</div>
+            </div>
+          </div>
 
-<div class="slip" id="s8">
-  <div class="sh">
-    <span class="sn">SLIP 8</span>
-    <span class="st">Plan → Customer</span>
-    <span class="sr">One-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Plan (
+          <div class="slip" id="s8">
+            <div class="sh">
+              <span class="sn">SLIP 8</span>
+              <span class="st">Plan → Customer</span>
+              <span class="sr">One-to-Many</span>
+            </div>
+            <div class="sb">
+              <div class="sl">3NF Schema</div>
+              <pre><span class="k">CREATE TABLE</span> Plan (
   plan_no       <span class="t">NUMBER</span>        <span class="k">PRIMARY KEY</span>,
   plan_name     <span class="t">VARCHAR2(50)</span>,
   nooffreecalls <span class="t">NUMBER</span>,
@@ -717,13 +1235,17 @@ Dish: Biryani               Rs.450 Qty: 1</pre></div>
   mobile_no <span class="t">VARCHAR2(15)</span>,
   plan_no   <span class="t">NUMBER</span>        <span class="k">REFERENCES</span> Plan(plan_no)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Accept plan_no and display all details of that plan</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> SELECT * INTO a %ROWTYPE variable. Print each field. Return fix_amt to satisfy RETURN requirement.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span class="chip">%ROWTYPE</span><span class="chip">SELECT * INTO</span><span class="chip">DBMS_OUTPUT</span><span class="chip">RETURN NUMBER</span></div>
-    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">get_plan_details</span>(p_no <span class="k">IN</span> Plan.plan_no<span class="k">%TYPE</span>)
+
+              <div class="qb">
+                <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Accept plan_no and display all
+                    details of that plan</span></div>
+                <div class="qi">
+                  <div class="ap"><strong>Approach:</strong> SELECT * INTO a %ROWTYPE variable. Print each field. Return
+                    fix_amt to satisfy RETURN requirement.</div>
+                  <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span
+                      class="chip">%ROWTYPE</span><span class="chip">SELECT * INTO</span><span
+                      class="chip">DBMS_OUTPUT</span><span class="chip">RETURN NUMBER</span></div>
+                  <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">get_plan_details</span>(p_no <span class="k">IN</span> Plan.plan_no<span class="k">%TYPE</span>)
 <span class="k">RETURN NUMBER IS</span>
   v_p Plan<span class="k">%ROWTYPE</span>;
 <span class="k">BEGIN</span>
@@ -743,20 +1265,27 @@ Dish: Biryani               Rs.450 Qty: 1</pre></div>
 <span class="k">DECLARE</span> v <span class="t">NUMBER</span>;
 <span class="k">BEGIN</span> v := <span class="f">get_plan_details</span>(<span class="n">3</span>); <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Plan No   : 3
+                  <div class="ob">
+                    <div class="ol">▶ Sample Output</div>
+                    <pre>Plan No   : 3
 Plan Name : Gold Plan
 Free Calls: 200
 Free Time : 500
-Fixed Amt : 299</pre></div>
-  </div>
-</div>
+Fixed Amt : 299</pre>
+                  </div>
+                </div>
+              </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display customer-wise plan details using Parameterized Cursor</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Outer loop iterates each Plan. For each plan_no, parameterized cursor fetches subscribed customers. OPEN/FETCH/CLOSE used explicitly.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">PARAMETERIZED CURSOR</span><span class="chip">OPEN/FETCH/CLOSE</span><span class="chip">%ROWTYPE</span><span class="chip">FOR LOOP</span><span class="chip">Nested LOOP</span></div>
-    <pre><span class="k">DECLARE</span>
+              <div class="qb">
+                <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display customer-wise plan details
+                    using Parameterized Cursor</span></div>
+                <div class="qi">
+                  <div class="ap"><strong>Approach:</strong> Outer loop iterates each Plan. For each plan_no,
+                    parameterized cursor fetches subscribed customers. OPEN/FETCH/CLOSE used explicitly.</div>
+                  <div class="tu"><span class="tul">Tags used:</span><span class="chip">PARAMETERIZED CURSOR</span><span
+                      class="chip">OPEN/FETCH/CLOSE</span><span class="chip">%ROWTYPE</span><span class="chip">FOR
+                      LOOP</span><span class="chip">Nested LOOP</span></div>
+                  <pre><span class="k">DECLARE</span>
   <span class="k">CURSOR</span> c_plan <span class="k">IS</span>
     <span class="k">SELECT</span> plan_no, plan_name, fix_amt <span class="k">FROM</span> Plan;
 
@@ -780,26 +1309,29 @@ Fixed Amt : 299</pre></div>
   <span class="k">END LOOP</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>=== Silver Plan (Rs.99) ===
+                  <div class="ob">
+                    <div class="ol">▶ Sample Output</div>
+                    <pre>=== Silver Plan (Rs.99) ===
   Ravi Kumar   (9876543210)
   Meena Joshi  (9988776655)
 === Gold Plan (Rs.299) ===
-  Arun Pawar   (9111222333)</pre></div>
-  </div>
-</div>
+  Arun Pawar   (9111222333)</pre>
+                  </div>
+                </div>
+              </div>
 
-  </div>
-</div>
+            </div>
+          </div>
 
-<div class="slip" id="s9">
-  <div class="sh">
-    <span class="sn">SLIP 9</span>
-    <span class="st">Project → Department</span>
-    <span class="sr">Many-to-One</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Department (
+          <div class="slip" id="s9">
+            <div class="sh">
+              <span class="sn">SLIP 9</span>
+              <span class="st">Project → Department</span>
+              <span class="sr">Many-to-One</span>
+            </div>
+            <div class="sb">
+              <div class="sl">3NF Schema</div>
+              <pre><span class="k">CREATE TABLE</span> Department (
   dno   <span class="t">NUMBER</span>        <span class="k">PRIMARY KEY</span>,
   dname <span class="t">VARCHAR2(50)</span>,
   HOD   <span class="t">VARCHAR2(50)</span>,
@@ -814,13 +1346,17 @@ Fixed Amt : 299</pre></div>
   dno        <span class="t">NUMBER</span>        <span class="k">REFERENCES</span> Department(dno)
 );
 <span class="c">-- Status: C=Completed, P=Progressive, I=Incomplete</span></pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Accept department name and return count of Progressive (P) projects</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> JOIN Project with Department. COUNT(*) WHERE status = 'P' AND UPPER(dname) = UPPER(parameter). Return count.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span class="chip">JOIN</span><span class="chip">COUNT(*)</span><span class="chip">SELECT INTO</span><span class="chip">UPPER()</span></div>
-    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">progressive_count</span>(p_dept <span class="k">IN</span> Department.dname<span class="k">%TYPE</span>)
+
+              <div class="qb">
+                <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Accept department name and return
+                    count of Progressive (P) projects</span></div>
+                <div class="qi">
+                  <div class="ap"><strong>Approach:</strong> JOIN Project with Department. COUNT(*) WHERE status = 'P'
+                    AND UPPER(dname) = UPPER(parameter). Return count.</div>
+                  <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span
+                      class="chip">JOIN</span><span class="chip">COUNT(*)</span><span class="chip">SELECT
+                      INTO</span><span class="chip">UPPER()</span></div>
+                  <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">progressive_count</span>(p_dept <span class="k">IN</span> Department.dname<span class="k">%TYPE</span>)
 <span class="k">RETURN NUMBER IS</span>
   v_cnt <span class="t">NUMBER</span>;
 <span class="k">BEGIN</span>
@@ -836,16 +1372,23 @@ Fixed Amt : 299</pre></div>
   <span class="f">DBMS_OUTPUT.PUT_LINE</span>(<span class="s">'Progressive Projects: '</span> || <span class="f">progressive_count</span>(<span class="s">'IT Department'</span>));
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Progressive Projects: 3</pre></div>
-  </div>
-</div>
+                  <div class="ob">
+                    <div class="ol">▶ Sample Output</div>
+                    <pre>Progressive Projects: 3</pre>
+                  </div>
+                </div>
+              </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display status-wise project details of each department</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Cursor JOINs Department and Project ordered by dname, status. Track department changes with a variable to print group headers.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">CURSOR</span><span class="chip">FOR LOOP</span><span class="chip">JOIN</span><span class="chip">ORDER BY</span><span class="chip">Change-break logic</span></div>
-    <pre><span class="k">DECLARE</span>
+              <div class="qb">
+                <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display status-wise project details
+                    of each department</span></div>
+                <div class="qi">
+                  <div class="ap"><strong>Approach:</strong> Cursor JOINs Department and Project ordered by dname,
+                    status. Track department changes with a variable to print group headers.</div>
+                  <div class="tu"><span class="tul">Tags used:</span><span class="chip">CURSOR</span><span
+                      class="chip">FOR LOOP</span><span class="chip">JOIN</span><span class="chip">ORDER BY</span><span
+                      class="chip">Change-break logic</span></div>
+                  <pre><span class="k">DECLARE</span>
   <span class="k">CURSOR</span> c_sp <span class="k">IS</span>
     <span class="k">SELECT</span> d.dname, p.pno, p.pname,
            p.status, p.budget
@@ -866,27 +1409,30 @@ Fixed Amt : 299</pre></div>
   <span class="k">END LOOP</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>=== Dept: HR Department ===
+                  <div class="ob">
+                    <div class="ol">▶ Sample Output</div>
+                    <pre>=== Dept: HR Department ===
   Status:C | Employee Portal  | Budget:500000
   Status:I | Payroll System   | Budget:200000
 === Dept: IT Department ===
   Status:P | Cloud Migration  | Budget:1500000
-  Status:P | AI Integration   | Budget:2000000</pre></div>
-  </div>
-</div>
+  Status:P | AI Integration   | Budget:2000000</pre>
+                  </div>
+                </div>
+              </div>
 
-  </div>
-</div>
+            </div>
+          </div>
 
-<div class="slip" id="s10">
-  <div class="sh">
-    <span class="sn">SLIP 10</span>
-    <span class="st">Gym → Member</span>
-    <span class="sr">One-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Gym (
+          <div class="slip" id="s10">
+            <div class="sh">
+              <span class="sn">SLIP 10</span>
+              <span class="st">Gym → Member</span>
+              <span class="sr">One-to-Many</span>
+            </div>
+            <div class="sb">
+              <div class="sl">3NF Schema</div>
+              <pre><span class="k">CREATE TABLE</span> Gym (
   Name    <span class="t">VARCHAR2(50)</span>  <span class="k">PRIMARY KEY</span>,
   city    <span class="t">VARCHAR2(50)</span>,
   charges <span class="t">NUMBER</span>        <span class="k">CHECK</span>(charges &gt; 0),
@@ -899,13 +1445,17 @@ Fixed Amt : 299</pre></div>
   address <span class="t">VARCHAR2(100)</span>,
   GymName <span class="t">VARCHAR2(50)</span>  <span class="k">REFERENCES</span> Gym(Name)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Accept member ID and scheme, return charges paid by that member</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> JOIN Member with Gym ON GymName. Filter WHERE Member.ID = param AND UPPER(scheme) = UPPER(param). Return charges.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span class="chip">JOIN</span><span class="chip">SELECT INTO</span><span class="chip">UPPER()</span><span class="chip">EXCEPTION NO_DATA_FOUND</span></div>
-    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">member_charges</span>(
+
+              <div class="qb">
+                <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Accept member ID and scheme,
+                    return charges paid by that member</span></div>
+                <div class="qi">
+                  <div class="ap"><strong>Approach:</strong> JOIN Member with Gym ON GymName. Filter WHERE Member.ID =
+                    param AND UPPER(scheme) = UPPER(param). Return charges.</div>
+                  <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span
+                      class="chip">JOIN</span><span class="chip">SELECT INTO</span><span
+                      class="chip">UPPER()</span><span class="chip">EXCEPTION NO_DATA_FOUND</span></div>
+                  <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">member_charges</span>(
   p_id     <span class="k">IN</span> Member.ID<span class="k">%TYPE</span>,
   p_scheme <span class="k">IN</span> Gym.scheme<span class="k">%TYPE</span>)
 <span class="k">RETURN NUMBER IS</span>
@@ -925,16 +1475,23 @@ Fixed Amt : 299</pre></div>
   <span class="f">DBMS_OUTPUT.PUT_LINE</span>(<span class="s">'Charges: '</span> || <span class="f">member_charges</span>(<span class="n">101</span>,<span class="s">'Annual'</span>));
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Charges: 12000</pre></div>
-  </div>
-</div>
+                  <div class="ob">
+                    <div class="ol">▶ Sample Output</div>
+                    <pre>Charges: 12000</pre>
+                  </div>
+                </div>
+              </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE on Gym — charges must be >= 1000</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Row-level trigger on Gym. Check :NEW.charges < 1000 and raise application error.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span class="chip">:NEW.charges</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
-    <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_gym_charges
+              <div class="qb">
+                <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE on Gym —
+                    charges must be >= 1000</span></div>
+                <div class="qi">
+                  <div class="ap"><strong>Approach:</strong> Row-level trigger on Gym. Check :NEW.charges < 1000 and
+                      raise application error.</div>
+                      <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span
+                          class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span
+                          class="chip">:NEW.charges</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
+                      <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_gym_charges
 <span class="k">BEFORE INSERT OR UPDATE ON</span> Gym
 <span class="k">FOR EACH ROW</span>
 <span class="k">BEGIN</span>
@@ -944,22 +1501,25 @@ Fixed Amt : 299</pre></div>
   <span class="k">END IF</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>ORA-20005: Error: Gym charges cannot be less than 1000!</pre></div>
-  </div>
-</div>
+                      <div class="ob">
+                        <div class="ol">▶ Sample Output</div>
+                        <pre>ORA-20005: Error: Gym charges cannot be less than 1000!</pre>
+                      </div>
+                  </div>
+                </div>
 
-  </div>
-</div>
+              </div>
+            </div>
 
-<div class="slip" id="s11">
-  <div class="sh">
-    <span class="sn">SLIP 11</span>
-    <span class="st">Student → Lab</span>
-    <span class="sr">Many-to-One</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Lab (
+            <div class="slip" id="s11">
+              <div class="sh">
+                <span class="sn">SLIP 11</span>
+                <span class="st">Student → Lab</span>
+                <span class="sr">Many-to-One</span>
+              </div>
+              <div class="sb">
+                <div class="sl">3NF Schema</div>
+                <pre><span class="k">CREATE TABLE</span> Lab (
   LabNo     <span class="t">NUMBER</span>        <span class="k">PRIMARY KEY</span>,
   LabName   <span class="t">VARCHAR2(50)</span>,
   capacity  <span class="t">NUMBER</span>        <span class="k">NOT NULL</span>,
@@ -972,13 +1532,17 @@ Fixed Amt : 299</pre></div>
   timetable <span class="t">VARCHAR2(100)</span>,
   LabNo     <span class="t">NUMBER</span>        <span class="k">REFERENCES</span> Lab(LabNo)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Accept Lab number and return total students allocated in that lab</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> COUNT(*) FROM Student WHERE LabNo = parameter. Return the count.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span class="chip">SELECT INTO</span><span class="chip">COUNT(*)</span><span class="chip">RETURN NUMBER</span><span class="chip">IN parameter</span></div>
-    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">students_in_lab</span>(p_lno <span class="k">IN</span> Lab.LabNo<span class="k">%TYPE</span>)
+
+                <div class="qb">
+                  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Accept Lab number and return
+                      total students allocated in that lab</span></div>
+                  <div class="qi">
+                    <div class="ap"><strong>Approach:</strong> COUNT(*) FROM Student WHERE LabNo = parameter. Return the
+                      count.</div>
+                    <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span
+                        class="chip">SELECT INTO</span><span class="chip">COUNT(*)</span><span class="chip">RETURN
+                        NUMBER</span><span class="chip">IN parameter</span></div>
+                    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">students_in_lab</span>(p_lno <span class="k">IN</span> Lab.LabNo<span class="k">%TYPE</span>)
 <span class="k">RETURN NUMBER IS</span>
   v_count <span class="t">NUMBER</span>;
 <span class="k">BEGIN</span>
@@ -992,16 +1556,23 @@ Fixed Amt : 299</pre></div>
   <span class="f">DBMS_OUTPUT.PUT_LINE</span>(<span class="s">'Students in Lab 3: '</span> || <span class="f">students_in_lab</span>(<span class="n">3</span>));
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Students in Lab 3: 28</pre></div>
-  </div>
-</div>
+                    <div class="ob">
+                      <div class="ol">▶ Sample Output</div>
+                      <pre>Students in Lab 3: 28</pre>
+                    </div>
+                  </div>
+                </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display lab-wise student details</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> JOIN Student and Lab ordered by LabNo. Print a header whenever the lab changes using a tracking variable.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">CURSOR</span><span class="chip">FOR LOOP</span><span class="chip">JOIN</span><span class="chip">ORDER BY</span><span class="chip">Change-break tracking</span></div>
-    <pre><span class="k">DECLARE</span>
+                <div class="qb">
+                  <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display lab-wise student
+                      details</span></div>
+                  <div class="qi">
+                    <div class="ap"><strong>Approach:</strong> JOIN Student and Lab ordered by LabNo. Print a header
+                      whenever the lab changes using a tracking variable.</div>
+                    <div class="tu"><span class="tul">Tags used:</span><span class="chip">CURSOR</span><span
+                        class="chip">FOR LOOP</span><span class="chip">JOIN</span><span class="chip">ORDER
+                        BY</span><span class="chip">Change-break tracking</span></div>
+                    <pre><span class="k">DECLARE</span>
   <span class="k">CURSOR</span> c_ls <span class="k">IS</span>
     <span class="k">SELECT</span> l.LabNo, l.LabName,
            s.rollno, s.sname, s.class
@@ -1019,26 +1590,29 @@ Fixed Amt : 299</pre></div>
   <span class="k">END LOOP</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>--- Lab: Computer Lab A ---
+                    <div class="ob">
+                      <div class="ol">▶ Sample Output</div>
+                      <pre>--- Lab: Computer Lab A ---
   101  Aarav Sharma   SE-A
   102  Priya Singh    SE-A
 --- Lab: Computer Lab B ---
-  201  Rohan Kulkarni TE-B</pre></div>
-  </div>
-</div>
+  201  Rohan Kulkarni TE-B</pre>
+                    </div>
+                  </div>
+                </div>
 
-  </div>
-</div>
+              </div>
+            </div>
 
-<div class="slip" id="s12">
-  <div class="sh">
-    <span class="sn">SLIP 12</span>
-    <span class="st">Wholesaler ↔ Product</span>
-    <span class="sr">Many-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Wholesaler (
+            <div class="slip" id="s12">
+              <div class="sh">
+                <span class="sn">SLIP 12</span>
+                <span class="st">Wholesaler ↔ Product</span>
+                <span class="sr">Many-to-Many</span>
+              </div>
+              <div class="sb">
+                <div class="sl">3NF Schema</div>
+                <pre><span class="k">CREATE TABLE</span> Wholesaler (
   w_no    <span class="t">NUMBER</span>        <span class="k">PRIMARY KEY</span>,
   w_name  <span class="t">VARCHAR2(50)</span>,
   address <span class="t">VARCHAR2(100)</span>,
@@ -1055,13 +1629,17 @@ Fixed Amt : 299</pre></div>
   quantity   <span class="t">NUMBER</span>,
   <span class="k">PRIMARY KEY</span>(w_no, product_no)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Accept wholesaler name and return total items supplied</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> JOIN Wholesaler with Wholesaler_Product. COUNT(*) WHERE UPPER(w_name) matches the input parameter.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span class="chip">JOIN</span><span class="chip">COUNT(*)</span><span class="chip">UPPER()</span><span class="chip">SELECT INTO</span></div>
-    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">items_by_wholesaler</span>(p_name <span class="k">IN</span> Wholesaler.w_name<span class="k">%TYPE</span>)
+
+                <div class="qb">
+                  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Accept wholesaler name and
+                      return total items supplied</span></div>
+                  <div class="qi">
+                    <div class="ap"><strong>Approach:</strong> JOIN Wholesaler with Wholesaler_Product. COUNT(*) WHERE
+                      UPPER(w_name) matches the input parameter.</div>
+                    <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span
+                        class="chip">JOIN</span><span class="chip">COUNT(*)</span><span class="chip">UPPER()</span><span
+                        class="chip">SELECT INTO</span></div>
+                    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">items_by_wholesaler</span>(p_name <span class="k">IN</span> Wholesaler.w_name<span class="k">%TYPE</span>)
 <span class="k">RETURN NUMBER IS</span>
   v_cnt <span class="t">NUMBER</span>;
 <span class="k">BEGIN</span>
@@ -1076,16 +1654,23 @@ Fixed Amt : 299</pre></div>
   <span class="f">DBMS_OUTPUT.PUT_LINE</span>(<span class="s">'Items: '</span> || <span class="f">items_by_wholesaler</span>(<span class="s">'Ajay Traders'</span>));
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Items: 7</pre></div>
-  </div>
-</div>
+                    <div class="ob">
+                      <div class="ol">▶ Sample Output</div>
+                      <pre>Items: 7</pre>
+                    </div>
+                  </div>
+                </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE on Product — rate must be > 0</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Row-level trigger on Product. Check :NEW.rate <= 0 and raise application error.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span class="chip">:NEW.rate</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
-    <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_product_rate
+                <div class="qb">
+                  <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE on
+                      Product — rate must be > 0</span></div>
+                  <div class="qi">
+                    <div class="ap"><strong>Approach:</strong> Row-level trigger on Product. Check :NEW.rate <= 0 and
+                        raise application error.</div>
+                        <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span
+                            class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span
+                            class="chip">:NEW.rate</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
+                        <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_product_rate
 <span class="k">BEFORE INSERT OR UPDATE ON</span> Product
 <span class="k">FOR EACH ROW</span>
 <span class="k">BEGIN</span>
@@ -1095,22 +1680,25 @@ Fixed Amt : 299</pre></div>
   <span class="k">END IF</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>ORA-20006: Error: Product rate must be greater than zero!</pre></div>
-  </div>
-</div>
+                        <div class="ob">
+                          <div class="ol">▶ Sample Output</div>
+                          <pre>ORA-20006: Error: Product rate must be greater than zero!</pre>
+                        </div>
+                    </div>
+                  </div>
 
-  </div>
-</div>
+                </div>
+              </div>
 
-<div class="slip" id="s13">
-  <div class="sh">
-    <span class="sn">SLIP 13</span>
-    <span class="st">Country → Citizen</span>
-    <span class="sr">One-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Country (
+              <div class="slip" id="s13">
+                <div class="sh">
+                  <span class="sn">SLIP 13</span>
+                  <span class="st">Country → Citizen</span>
+                  <span class="sr">One-to-Many</span>
+                </div>
+                <div class="sb">
+                  <div class="sl">3NF Schema</div>
+                  <pre><span class="k">CREATE TABLE</span> Country (
   CId          <span class="t">NUMBER</span>        <span class="k">PRIMARY KEY</span>,
   CName        <span class="t">VARCHAR2(50)</span>,
   no_of_states <span class="t">NUMBER</span>,
@@ -1125,13 +1713,17 @@ Fixed Amt : 299</pre></div>
   state_name   <span class="t">VARCHAR2(50)</span>,
   CId          <span class="t">NUMBER</span>        <span class="k">REFERENCES</span> Country(CId)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Return the name of the country with minimum population</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> SELECT CName WHERE population = (SELECT MIN(population) FROM Country). Return CName as VARCHAR2.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span class="chip">RETURN VARCHAR2</span><span class="chip">SELECT INTO</span><span class="chip">MIN()</span><span class="chip">Subquery</span></div>
-    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">min_pop_country</span>
+
+                  <div class="qb">
+                    <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Return the name of the
+                        country with minimum population</span></div>
+                    <div class="qi">
+                      <div class="ap"><strong>Approach:</strong> SELECT CName WHERE population = (SELECT MIN(population)
+                        FROM Country). Return CName as VARCHAR2.</div>
+                      <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span
+                          class="chip">RETURN VARCHAR2</span><span class="chip">SELECT INTO</span><span
+                          class="chip">MIN()</span><span class="chip">Subquery</span></div>
+                      <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">min_pop_country</span>
 <span class="k">RETURN VARCHAR2 IS</span>
   v_name Country.CName<span class="k">%TYPE</span>;
 <span class="k">BEGIN</span>
@@ -1145,16 +1737,23 @@ Fixed Amt : 299</pre></div>
   <span class="f">DBMS_OUTPUT.PUT_LINE</span>(<span class="s">'Country: '</span> || <span class="f">min_pop_country</span>());
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Country: Iceland</pre></div>
-  </div>
-</div>
+                      <div class="ob">
+                        <div class="ol">▶ Sample Output</div>
+                        <pre>Country: Iceland</pre>
+                      </div>
+                    </div>
+                  </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display country-wise citizen details</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> JOIN Country and Citizen ordered by CName. Print a group header whenever country changes.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">CURSOR</span><span class="chip">FOR LOOP</span><span class="chip">JOIN</span><span class="chip">ORDER BY</span><span class="chip">Change-break</span></div>
-    <pre><span class="k">DECLARE</span>
+                  <div class="qb">
+                    <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display country-wise citizen
+                        details</span></div>
+                    <div class="qi">
+                      <div class="ap"><strong>Approach:</strong> JOIN Country and Citizen ordered by CName. Print a
+                        group header whenever country changes.</div>
+                      <div class="tu"><span class="tul">Tags used:</span><span class="chip">CURSOR</span><span
+                          class="chip">FOR LOOP</span><span class="chip">JOIN</span><span class="chip">ORDER
+                          BY</span><span class="chip">Change-break</span></div>
+                      <pre><span class="k">DECLARE</span>
   <span class="k">CURSOR</span> c_cc <span class="k">IS</span>
     <span class="k">SELECT</span> co.CName, ci.Name, ci.mother_toung, ci.state_name
       <span class="k">FROM</span> Country co
@@ -1172,26 +1771,29 @@ Fixed Amt : 299</pre></div>
   <span class="k">END LOOP</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>=== Country: India ===
+                      <div class="ob">
+                        <div class="ol">▶ Sample Output</div>
+                        <pre>=== Country: India ===
   Arjun Mehta (Hindi) - Maharashtra
   Sita Devi   (Tamil) - Tamil Nadu
 === Country: Iceland ===
-  Erik Jonsson (Icelandic) - Capital Region</pre></div>
-  </div>
-</div>
+  Erik Jonsson (Icelandic) - Capital Region</pre>
+                      </div>
+                    </div>
+                  </div>
 
-  </div>
-</div>
+                </div>
+              </div>
 
-<div class="slip" id="s14">
-  <div class="sh">
-    <span class="sn">SLIP 14</span>
-    <span class="st">Teacher → College</span>
-    <span class="sr">Many-to-One</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> College (
+              <div class="slip" id="s14">
+                <div class="sh">
+                  <span class="sn">SLIP 14</span>
+                  <span class="st">Teacher → College</span>
+                  <span class="sr">Many-to-One</span>
+                </div>
+                <div class="sb">
+                  <div class="sl">3NF Schema</div>
+                  <pre><span class="k">CREATE TABLE</span> College (
   code         <span class="t">NUMBER</span>        <span class="k">PRIMARY KEY</span>,
   college_name <span class="t">VARCHAR2(100)</span>,
   address      <span class="t">VARCHAR2(100)</span>
@@ -1205,13 +1807,18 @@ Fixed Amt : 299</pre></div>
   Desg           <span class="t">VARCHAR2(30)</span>,
   code           <span class="t">NUMBER</span>        <span class="k">REFERENCES</span> College(code)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge pr">PROCEDURE</span><span class="qt">Accept teacher name and display their college details</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> JOIN Teacher with College WHERE UPPER(teacher_name) = UPPER(param). SELECT college details INTO %ROWTYPE. Handle NO_DATA_FOUND.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">PROCEDURE</span><span class="chip">IN parameter</span><span class="chip">JOIN</span><span class="chip">SELECT INTO</span><span class="chip">%ROWTYPE</span><span class="chip">EXCEPTION NO_DATA_FOUND</span></div>
-    <pre><span class="k">CREATE OR REPLACE PROCEDURE</span> <span class="f">teacher_college</span>(p_name <span class="k">IN</span> Teacher.teacher_name<span class="k">%TYPE</span>) <span class="k">IS</span>
+
+                  <div class="qb">
+                    <div class="qh"><span class="badge pr">PROCEDURE</span><span class="qt">Accept teacher name and
+                        display their college details</span></div>
+                    <div class="qi">
+                      <div class="ap"><strong>Approach:</strong> JOIN Teacher with College WHERE UPPER(teacher_name) =
+                        UPPER(param). SELECT college details INTO %ROWTYPE. Handle NO_DATA_FOUND.</div>
+                      <div class="tu"><span class="tul">Tags used:</span><span class="chip">PROCEDURE</span><span
+                          class="chip">IN parameter</span><span class="chip">JOIN</span><span class="chip">SELECT
+                          INTO</span><span class="chip">%ROWTYPE</span><span class="chip">EXCEPTION NO_DATA_FOUND</span>
+                      </div>
+                      <pre><span class="k">CREATE OR REPLACE PROCEDURE</span> <span class="f">teacher_college</span>(p_name <span class="k">IN</span> Teacher.teacher_name<span class="k">%TYPE</span>) <span class="k">IS</span>
   v_col College<span class="k">%ROWTYPE</span>;
 <span class="k">BEGIN</span>
   <span class="k">SELECT</span> c.* <span class="k">INTO</span> v_col
@@ -1227,18 +1834,25 @@ Fixed Amt : 299</pre></div>
 <span class="k">END</span>;
 /
 <span class="k">EXEC</span> <span class="f">teacher_college</span>(<span class="s">'Dr. Priya Verma'</span>);</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Code    : 501
+                      <div class="ob">
+                        <div class="ol">▶ Sample Output</div>
+                        <pre>Code    : 501
 College : Pune Institute of Technology
-Address : Shivajinagar, Pune - 411005</pre></div>
-  </div>
-</div>
+Address : Shivajinagar, Pune - 411005</pre>
+                      </div>
+                    </div>
+                  </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE on Teacher — salary must be > 0</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Row-level trigger on Teacher. Check :NEW.salary <= 0 and raise application error.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span class="chip">:NEW.salary</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
-    <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_teacher_salary
+                  <div class="qb">
+                    <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE on
+                        Teacher — salary must be > 0</span></div>
+                    <div class="qi">
+                      <div class="ap"><strong>Approach:</strong> Row-level trigger on Teacher. Check :NEW.salary <= 0
+                          and raise application error.</div>
+                          <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span
+                              class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span
+                              class="chip">:NEW.salary</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
+                          <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_teacher_salary
 <span class="k">BEFORE INSERT OR UPDATE ON</span> Teacher
 <span class="k">FOR EACH ROW</span>
 <span class="k">BEGIN</span>
@@ -1248,22 +1862,25 @@ Address : Shivajinagar, Pune - 411005</pre></div>
   <span class="k">END IF</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>ORA-20007: Error: Teacher salary must be greater than zero!</pre></div>
-  </div>
-</div>
+                          <div class="ob">
+                            <div class="ol">▶ Sample Output</div>
+                            <pre>ORA-20007: Error: Teacher salary must be greater than zero!</pre>
+                          </div>
+                      </div>
+                    </div>
 
-  </div>
-</div>
+                  </div>
+                </div>
 
-<div class="slip" id="s15">
-  <div class="sh">
-    <span class="sn">SLIP 15</span>
-    <span class="st">Driver ↔ Car</span>
-    <span class="sr">Many-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Driver (
+                <div class="slip" id="s15">
+                  <div class="sh">
+                    <span class="sn">SLIP 15</span>
+                    <span class="st">Driver ↔ Car</span>
+                    <span class="sr">Many-to-Many</span>
+                  </div>
+                  <div class="sb">
+                    <div class="sl">3NF Schema</div>
+                    <pre><span class="k">CREATE TABLE</span> Driver (
   driver_id   <span class="t">NUMBER</span>        <span class="k">PRIMARY KEY</span>,
   driver_name <span class="t">VARCHAR2(50)</span>  <span class="k">NOT NULL</span>,
   address     <span class="t">VARCHAR2(100)</span>
@@ -1281,13 +1898,17 @@ Address : Shivajinagar, Pune - 411005</pre></div>
   usage_time <span class="t">VARCHAR2(10)</span>,
   <span class="k">PRIMARY KEY</span>(driver_id, license_no, usage_date)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Return total number of persons using 'Swift' car</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> COUNT DISTINCT driver_id in Driver_Car where Car.model LIKE '%SWIFT%' using a JOIN.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span class="chip">JOIN</span><span class="chip">COUNT DISTINCT</span><span class="chip">LIKE</span><span class="chip">UPPER()</span></div>
-    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">swift_driver_count</span>
+
+                    <div class="qb">
+                      <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Return total number of
+                          persons using 'Swift' car</span></div>
+                      <div class="qi">
+                        <div class="ap"><strong>Approach:</strong> COUNT DISTINCT driver_id in Driver_Car where
+                          Car.model LIKE '%SWIFT%' using a JOIN.</div>
+                        <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span
+                            class="chip">JOIN</span><span class="chip">COUNT DISTINCT</span><span
+                            class="chip">LIKE</span><span class="chip">UPPER()</span></div>
+                        <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">swift_driver_count</span>
 <span class="k">RETURN NUMBER IS</span>
   v_cnt <span class="t">NUMBER</span>;
 <span class="k">BEGIN</span>
@@ -1302,16 +1923,24 @@ Address : Shivajinagar, Pune - 411005</pre></div>
   <span class="f">DBMS_OUTPUT.PUT_LINE</span>(<span class="s">'Swift Users: '</span> || <span class="f">swift_driver_count</span>());
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Swift Users: 12</pre></div>
-  </div>
-</div>
+                        <div class="ob">
+                          <div class="ol">▶ Sample Output</div>
+                          <pre>Swift Users: 12</pre>
+                        </div>
+                      </div>
+                    </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE on Car — year must not exceed current year</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Compare :NEW.year with EXTRACT(YEAR FROM SYSDATE). If :NEW.year > current year, raise error.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">:NEW.year</span><span class="chip">EXTRACT(YEAR FROM SYSDATE)</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
-    <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_car_year
+                    <div class="qb">
+                      <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE on
+                          Car — year must not exceed current year</span></div>
+                      <div class="qi">
+                        <div class="ap"><strong>Approach:</strong> Compare :NEW.year with EXTRACT(YEAR FROM SYSDATE). If
+                          :NEW.year > current year, raise error.</div>
+                        <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span
+                            class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">:NEW.year</span><span
+                            class="chip">EXTRACT(YEAR FROM SYSDATE)</span><span
+                            class="chip">RAISE_APPLICATION_ERROR</span></div>
+                        <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_car_year
 <span class="k">BEFORE INSERT OR UPDATE ON</span> Car
 <span class="k">FOR EACH ROW</span>
 <span class="k">BEGIN</span>
@@ -1324,22 +1953,25 @@ Address : Shivajinagar, Pune - 411005</pre></div>
 /
 <span class="c">-- Test (year 2099 will fail):</span>
 <span class="k">INSERT INTO</span> Car <span class="k">VALUES</span>(<span class="s">'MH01AA9999'</span>,<span class="s">'Swift'</span>,<span class="n">2099</span>);</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>ORA-20008: Error: Car year cannot be greater than 2025!</pre></div>
-  </div>
-</div>
+                        <div class="ob">
+                          <div class="ol">▶ Sample Output</div>
+                          <pre>ORA-20008: Error: Car year cannot be greater than 2025!</pre>
+                        </div>
+                      </div>
+                    </div>
 
-  </div>
-</div>
+                  </div>
+                </div>
 
-<div class="slip" id="s16">
-  <div class="sh">
-    <span class="sn">SLIP 16</span>
-    <span class="st">Game ↔ Player</span>
-    <span class="sr">Many-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Game (
+                <div class="slip" id="s16">
+                  <div class="sh">
+                    <span class="sn">SLIP 16</span>
+                    <span class="st">Game ↔ Player</span>
+                    <span class="sr">Many-to-Many</span>
+                  </div>
+                  <div class="sb">
+                    <div class="sl">3NF Schema</div>
+                    <pre><span class="k">CREATE TABLE</span> Game (
   game_name     <span class="t">VARCHAR2(50)</span> <span class="k">PRIMARY KEY</span>,
   no_of_players <span class="t">NUMBER</span>       <span class="k">CHECK</span>(no_of_players &gt; 0),
   coach_name    <span class="t">VARCHAR2(50)</span>
@@ -1355,13 +1987,18 @@ Address : Shivajinagar, Pune - 411005</pre></div>
   pid       <span class="t">NUMBER</span>       <span class="k">REFERENCES</span> Player(pid),
   <span class="k">PRIMARY KEY</span>(game_name, pid)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge pr">PROCEDURE</span><span class="qt">Display games having no_of_players more than a given value</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Accept p_min as IN NUMBER parameter (default 10). Cursor selects from Game WHERE no_of_players > p_min. Loop and print.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">PROCEDURE</span><span class="chip">IN parameter</span><span class="chip">DEFAULT value</span><span class="chip">CURSOR</span><span class="chip">FOR LOOP</span><span class="chip">ORDER BY DESC</span></div>
-    <pre><span class="k">CREATE OR REPLACE PROCEDURE</span> <span class="f">games_above_players</span>(p_min <span class="k">IN</span> <span class="t">NUMBER</span> <span class="k">DEFAULT</span> <span class="n">10</span>) <span class="k">IS</span>
+
+                    <div class="qb">
+                      <div class="qh"><span class="badge pr">PROCEDURE</span><span class="qt">Display games having
+                          no_of_players more than a given value</span></div>
+                      <div class="qi">
+                        <div class="ap"><strong>Approach:</strong> Accept p_min as IN NUMBER parameter (default 10).
+                          Cursor selects from Game WHERE no_of_players > p_min. Loop and print.</div>
+                        <div class="tu"><span class="tul">Tags used:</span><span class="chip">PROCEDURE</span><span
+                            class="chip">IN parameter</span><span class="chip">DEFAULT value</span><span
+                            class="chip">CURSOR</span><span class="chip">FOR LOOP</span><span class="chip">ORDER BY
+                            DESC</span></div>
+                        <pre><span class="k">CREATE OR REPLACE PROCEDURE</span> <span class="f">games_above_players</span>(p_min <span class="k">IN</span> <span class="t">NUMBER</span> <span class="k">DEFAULT</span> <span class="n">10</span>) <span class="k">IS</span>
   <span class="k">CURSOR</span> c_g <span class="k">IS</span>
     <span class="k">SELECT</span> game_name, no_of_players, coach_name
       <span class="k">FROM</span> Game
@@ -1377,19 +2014,26 @@ Address : Shivajinagar, Pune - 411005</pre></div>
 <span class="k">END</span>;
 /
 <span class="k">EXEC</span> <span class="f">games_above_players</span>(<span class="n">10</span>);</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Games with players > 10:
+                        <div class="ob">
+                          <div class="ol">▶ Sample Output</div>
+                          <pre>Games with players > 10:
 Kabaddi  | Players: 12 | Coach: Anil Kumar
 Cricket  | Players: 11 | Coach: Rahul Dravid
-Football | Players: 11 | Coach: Igor Stimac</pre></div>
-  </div>
-</div>
+Football | Players: 11 | Coach: Igor Stimac</pre>
+                        </div>
+                      </div>
+                    </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE on Game — no_of_players must be > 0</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Row-level trigger on Game. If :NEW.no_of_players <= 0 raise application error.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span class="chip">:NEW</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
-    <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_game_players
+                    <div class="qb">
+                      <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE on
+                          Game — no_of_players must be > 0</span></div>
+                      <div class="qi">
+                        <div class="ap"><strong>Approach:</strong> Row-level trigger on Game. If :NEW.no_of_players <= 0
+                            raise application error.</div>
+                            <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span
+                                class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span
+                                class="chip">:NEW</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
+                            <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_game_players
 <span class="k">BEFORE INSERT OR UPDATE ON</span> Game
 <span class="k">FOR EACH ROW</span>
 <span class="k">BEGIN</span>
@@ -1399,22 +2043,25 @@ Football | Players: 11 | Coach: Igor Stimac</pre></div>
   <span class="k">END IF</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>ORA-20009: Error: Number of players must be greater than zero!</pre></div>
-  </div>
-</div>
+                            <div class="ob">
+                              <div class="ol">▶ Sample Output</div>
+                              <pre>ORA-20009: Error: Number of players must be greater than zero!</pre>
+                            </div>
+                        </div>
+                      </div>
 
-  </div>
-</div>
+                    </div>
+                  </div>
 
-<div class="slip" id="s17">
-  <div class="sh">
-    <span class="sn">SLIP 17</span>
-    <span class="st">Company ↔ Person</span>
-    <span class="sr">Many-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Company (
+                  <div class="slip" id="s17">
+                    <div class="sh">
+                      <span class="sn">SLIP 17</span>
+                      <span class="st">Company ↔ Person</span>
+                      <span class="sr">Many-to-Many</span>
+                    </div>
+                    <div class="sb">
+                      <div class="sl">3NF Schema</div>
+                      <pre><span class="k">CREATE TABLE</span> Company (
   name        <span class="t">VARCHAR2(50)</span>  <span class="k">PRIMARY KEY</span>,
   address     <span class="t">VARCHAR2(100)</span>,
   city        <span class="t">VARCHAR2(50)</span>,
@@ -1431,13 +2078,18 @@ Football | Players: 11 | Coach: Igor Stimac</pre></div>
   no_of_shares <span class="t">NUMBER</span>       <span class="k">CHECK</span>(no_of_shares &gt; 0),
   <span class="k">PRIMARY KEY</span>(name, pname)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE — no_of_shares must not be zero or negative</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> BEFORE INSERT OR UPDATE on Company_Person. Declare a user exception, raise it if :NEW.no_of_shares <= 0, handle in EXCEPTION block.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span class="chip">User-defined EXCEPTION</span><span class="chip">RAISE</span><span class="chip">RAISE_APPLICATION_ERROR</span></div>
-    <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_shares_check
+
+                      <div class="qb">
+                        <div class="qh"><span class="badge tr">TRIGGER</span><span class="qt">BEFORE INSERT or UPDATE —
+                            no_of_shares must not be zero or negative</span></div>
+                        <div class="qi">
+                          <div class="ap"><strong>Approach:</strong> BEFORE INSERT OR UPDATE on Company_Person. Declare
+                            a user exception, raise it if :NEW.no_of_shares <= 0, handle in EXCEPTION block.</div>
+                              <div class="tu"><span class="tul">Tags used:</span><span class="chip">TRIGGER</span><span
+                                  class="chip">BEFORE INSERT OR UPDATE</span><span class="chip">FOR EACH ROW</span><span
+                                  class="chip">User-defined EXCEPTION</span><span class="chip">RAISE</span><span
+                                  class="chip">RAISE_APPLICATION_ERROR</span></div>
+                              <pre><span class="k">CREATE OR REPLACE TRIGGER</span> trg_shares_check
 <span class="k">BEFORE INSERT OR UPDATE ON</span> Company_Person
 <span class="k">FOR EACH ROW</span>
 <span class="k">DECLARE</span>
@@ -1452,16 +2104,23 @@ Football | Players: 11 | Coach: Igor Stimac</pre></div>
       <span class="s">'Error: Number of shares cannot be zero or negative!'</span>);
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>ORA-20010: Error: Number of shares cannot be zero or negative!</pre></div>
-  </div>
-</div>
+                              <div class="ob">
+                                <div class="ol">▶ Sample Output</div>
+                                <pre>ORA-20010: Error: Number of shares cannot be zero or negative!</pre>
+                              </div>
+                          </div>
+                        </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Return total no_of_shares held by a specific person</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> SUM(no_of_shares) FROM Company_Person WHERE pname = parameter. Use NVL to return 0 if no shares found.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span class="chip">SELECT INTO</span><span class="chip">SUM</span><span class="chip">NVL</span><span class="chip">RETURN NUMBER</span></div>
-    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">total_shares</span>(p_pname <span class="k">IN</span> Person.pname<span class="k">%TYPE</span>)
+                        <div class="qb">
+                          <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Return total
+                              no_of_shares held by a specific person</span></div>
+                          <div class="qi">
+                            <div class="ap"><strong>Approach:</strong> SUM(no_of_shares) FROM Company_Person WHERE pname
+                              = parameter. Use NVL to return 0 if no shares found.</div>
+                            <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span
+                                class="chip">SELECT INTO</span><span class="chip">SUM</span><span
+                                class="chip">NVL</span><span class="chip">RETURN NUMBER</span></div>
+                            <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">total_shares</span>(p_pname <span class="k">IN</span> Person.pname<span class="k">%TYPE</span>)
 <span class="k">RETURN NUMBER IS</span>
   v_total <span class="t">NUMBER</span>;
 <span class="k">BEGIN</span>
@@ -1475,22 +2134,25 @@ Football | Players: 11 | Coach: Igor Stimac</pre></div>
   <span class="f">DBMS_OUTPUT.PUT_LINE</span>(<span class="s">'Total Shares: '</span> || <span class="f">total_shares</span>(<span class="s">'Ramesh'</span>));
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Total Shares: 2500</pre></div>
-  </div>
-</div>
+                            <div class="ob">
+                              <div class="ol">▶ Sample Output</div>
+                              <pre>Total Shares: 2500</pre>
+                            </div>
+                          </div>
+                        </div>
 
-  </div>
-</div>
+                      </div>
+                    </div>
 
-<div class="slip" id="s18">
-  <div class="sh">
-    <span class="sn">SLIP 18</span>
-    <span class="st">Student ↔ Competition</span>
-    <span class="sr">Many-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="k">CREATE TABLE</span> Student (
+                    <div class="slip" id="s18">
+                      <div class="sh">
+                        <span class="sn">SLIP 18</span>
+                        <span class="st">Student ↔ Competition</span>
+                        <span class="sr">Many-to-Many</span>
+                      </div>
+                      <div class="sb">
+                        <div class="sl">3NF Schema</div>
+                        <pre><span class="k">CREATE TABLE</span> Student (
   s_reg_no <span class="t">NUMBER</span>        <span class="k">PRIMARY KEY</span>,
   s_name   <span class="t">VARCHAR2(50)</span>  <span class="k">NOT NULL</span>,
   s_class  <span class="t">VARCHAR2(20)</span>
@@ -1508,13 +2170,17 @@ Football | Players: 11 | Coach: Igor Stimac</pre></div>
   year     <span class="t">NUMBER(4)</span>,
   <span class="k">PRIMARY KEY</span>(s_reg_no, comp_no, year)
 );</pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Accept s_reg_no and year, return total competitions participated</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> COUNT(*) FROM Student_Competition WHERE s_reg_no = p_reg AND year = p_year. Return count.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span class="chip">Multiple IN parameters</span><span class="chip">SELECT INTO</span><span class="chip">COUNT(*)</span><span class="chip">RETURN NUMBER</span></div>
-    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">comp_count</span>(
+
+                        <div class="qb">
+                          <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Accept s_reg_no and
+                              year, return total competitions participated</span></div>
+                          <div class="qi">
+                            <div class="ap"><strong>Approach:</strong> COUNT(*) FROM Student_Competition WHERE s_reg_no
+                              = p_reg AND year = p_year. Return count.</div>
+                            <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span
+                                class="chip">Multiple IN parameters</span><span class="chip">SELECT INTO</span><span
+                                class="chip">COUNT(*)</span><span class="chip">RETURN NUMBER</span></div>
+                            <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">comp_count</span>(
   p_reg  <span class="k">IN</span> Student.s_reg_no<span class="k">%TYPE</span>,
   p_year <span class="k">IN</span> <span class="t">NUMBER</span>)
 <span class="k">RETURN NUMBER IS</span>
@@ -1530,16 +2196,24 @@ Football | Players: 11 | Coach: Igor Stimac</pre></div>
   <span class="f">DBMS_OUTPUT.PUT_LINE</span>(<span class="s">'Competitions in 2023: '</span> || <span class="f">comp_count</span>(<span class="n">1001</span>,<span class="n">2023</span>));
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Competitions in 2023: 5</pre></div>
-  </div>
-</div>
+                            <div class="ob">
+                              <div class="ol">▶ Sample Output</div>
+                              <pre>Competitions in 2023: 5</pre>
+                            </div>
+                          </div>
+                        </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display year-wise competition details using Parameterized Cursor</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Outer loop fetches distinct years. For each year, open a parameterized cursor to get all competitions and participants of that year.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">PARAMETERIZED CURSOR</span><span class="chip">OPEN/FETCH/CLOSE</span><span class="chip">Distinct years</span><span class="chip">3-table JOIN</span><span class="chip">%ROWTYPE</span></div>
-    <pre><span class="k">DECLARE</span>
+                        <div class="qb">
+                          <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display year-wise
+                              competition details using Parameterized Cursor</span></div>
+                          <div class="qi">
+                            <div class="ap"><strong>Approach:</strong> Outer loop fetches distinct years. For each year,
+                              open a parameterized cursor to get all competitions and participants of that year.</div>
+                            <div class="tu"><span class="tul">Tags used:</span><span class="chip">PARAMETERIZED
+                                CURSOR</span><span class="chip">OPEN/FETCH/CLOSE</span><span class="chip">Distinct
+                                years</span><span class="chip">3-table JOIN</span><span class="chip">%ROWTYPE</span>
+                            </div>
+                            <pre><span class="k">DECLARE</span>
   <span class="k">CURSOR</span> c_years <span class="k">IS</span>
     <span class="k">SELECT DISTINCT</span> year <span class="k">FROM</span> Student_Competition <span class="k">ORDER BY</span> year;
 
@@ -1566,34 +2240,41 @@ Football | Players: 11 | Coach: Igor Stimac</pre></div>
   <span class="k">END LOOP</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>===== Year: 2022 =====
+                            <div class="ob">
+                              <div class="ol">▶ Sample Output</div>
+                              <pre>===== Year: 2022 =====
   Aisha Khan | Science Quiz | academic | Rank: 1
   Rohan More | Athletics    | sports   | Rank: 2
 ===== Year: 2023 =====
   Priya Iyer | Debate       | academic | Rank: 1
-  Dev Nair   | Cricket      | sports   | Rank: 3</pre></div>
-  </div>
-</div>
+  Dev Nair   | Cricket      | sports   | Rank: 3</pre>
+                            </div>
+                          </div>
+                        </div>
 
-  </div>
-</div>
+                      </div>
+                    </div>
 
-<div class="slip" id="s19">
-  <div class="sh">
-    <span class="sn">SLIP 19</span>
-    <span class="st">Game ↔ Player (Football / Sports Club)</span>
-    <span class="sr">Many-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="c">-- Same schema as Slip 16: Game, Player, Game_Player</span></pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Return total Football players of 'Sports Club'</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> 3-table JOIN: Game_Player + Player + Game. COUNT DISTINCT pid WHERE game_name='FOOTBALL' AND UPPER(club_name)='SPORTS CLUB'.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span class="chip">3-table JOIN</span><span class="chip">COUNT DISTINCT</span><span class="chip">UPPER()</span><span class="chip">SELECT INTO</span></div>
-    <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">football_sports_club</span>
+                    <div class="slip" id="s19">
+                      <div class="sh">
+                        <span class="sn">SLIP 19</span>
+                        <span class="st">Game ↔ Player (Football / Sports Club)</span>
+                        <span class="sr">Many-to-Many</span>
+                      </div>
+                      <div class="sb">
+                        <div class="sl">3NF Schema</div>
+                        <pre><span class="c">-- Same schema as Slip 16: Game, Player, Game_Player</span></pre>
+
+                        <div class="qb">
+                          <div class="qh"><span class="badge fn">FUNCTION</span><span class="qt">Return total Football
+                              players of 'Sports Club'</span></div>
+                          <div class="qi">
+                            <div class="ap"><strong>Approach:</strong> 3-table JOIN: Game_Player + Player + Game. COUNT
+                              DISTINCT pid WHERE game_name='FOOTBALL' AND UPPER(club_name)='SPORTS CLUB'.</div>
+                            <div class="tu"><span class="tul">Tags used:</span><span class="chip">FUNCTION</span><span
+                                class="chip">3-table JOIN</span><span class="chip">COUNT DISTINCT</span><span
+                                class="chip">UPPER()</span><span class="chip">SELECT INTO</span></div>
+                            <pre><span class="k">CREATE OR REPLACE FUNCTION</span> <span class="f">football_sports_club</span>
 <span class="k">RETURN NUMBER IS</span>
   v_cnt <span class="t">NUMBER</span>;
 <span class="k">BEGIN</span>
@@ -1610,16 +2291,23 @@ Football | Players: 11 | Coach: Igor Stimac</pre></div>
   <span class="f">DBMS_OUTPUT.PUT_LINE</span>(<span class="s">'Football Players in Sports Club: '</span> || <span class="f">football_sports_club</span>());
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Football Players in Sports Club: 11</pre></div>
-  </div>
-</div>
+                            <div class="ob">
+                              <div class="ol">▶ Sample Output</div>
+                              <pre>Football Players in Sports Club: 11</pre>
+                            </div>
+                          </div>
+                        </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display club-wise player details</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Cursor SELECTs all players ordered by club_name. Print a group header when club changes using a tracking variable.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">CURSOR</span><span class="chip">FOR LOOP</span><span class="chip">ORDER BY club_name</span><span class="chip">Change-break tracking</span></div>
-    <pre><span class="k">DECLARE</span>
+                        <div class="qb">
+                          <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display club-wise player
+                              details</span></div>
+                          <div class="qi">
+                            <div class="ap"><strong>Approach:</strong> Cursor SELECTs all players ordered by club_name.
+                              Print a group header when club changes using a tracking variable.</div>
+                            <div class="tu"><span class="tul">Tags used:</span><span class="chip">CURSOR</span><span
+                                class="chip">FOR LOOP</span><span class="chip">ORDER BY club_name</span><span
+                                class="chip">Change-break tracking</span></div>
+                            <pre><span class="k">DECLARE</span>
   <span class="k">CURSOR</span> c_club <span class="k">IS</span>
     <span class="k">SELECT</span> pid, pname, address, club_name
       <span class="k">FROM</span> Player
@@ -1636,34 +2324,42 @@ Football | Players: 11 | Coach: Igor Stimac</pre></div>
   <span class="k">END LOOP</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>=== Club: City FC ===
+                            <div class="ob">
+                              <div class="ol">▶ Sample Output</div>
+                              <pre>=== Club: City FC ===
   PID:1 Name:Raj Verma
   PID:4 Name:Sunil Gaur
 === Club: Sports Club ===
   PID:2 Name:Amit Patel
-  PID:3 Name:Vivek Nair</pre></div>
-  </div>
-</div>
+  PID:3 Name:Vivek Nair</pre>
+                            </div>
+                          </div>
+                        </div>
 
-  </div>
-</div>
+                      </div>
+                    </div>
 
-<div class="slip" id="s20">
-  <div class="sh">
-    <span class="sn">SLIP 20</span>
-    <span class="st">Driver ↔ Car (Day & Year Queries)</span>
-    <span class="sr">Many-to-Many</span>
-  </div>
-  <div class="sb">
-    <div class="sl">3NF Schema</div>
-    <pre><span class="c">-- Same schema as Slip 15: Driver, Car, Driver_Car</span></pre>
-    
-<div class="qb">
-  <div class="qh"><span class="badge pr">PROCEDURE</span><span class="qt">Display car details used on a specific day</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> Accept p_date as IN DATE. JOIN Driver_Car with Car WHERE TRUNC(usage_date) = TRUNC(p_date). Print car model, license, year, time.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">PROCEDURE</span><span class="chip">IN DATE parameter</span><span class="chip">TRUNC()</span><span class="chip">JOIN</span><span class="chip">CURSOR FOR LOOP</span><span class="chip">DISTINCT</span></div>
-    <pre><span class="k">CREATE OR REPLACE PROCEDURE</span> <span class="f">cars_on_day</span>(p_date <span class="k">IN DATE</span>) <span class="k">IS</span>
+                    <div class="slip" id="s20">
+                      <div class="sh">
+                        <span class="sn">SLIP 20</span>
+                        <span class="st">Driver ↔ Car (Day & Year Queries)</span>
+                        <span class="sr">Many-to-Many</span>
+                      </div>
+                      <div class="sb">
+                        <div class="sl">3NF Schema</div>
+                        <pre><span class="c">-- Same schema as Slip 15: Driver, Car, Driver_Car</span></pre>
+
+                        <div class="qb">
+                          <div class="qh"><span class="badge pr">PROCEDURE</span><span class="qt">Display car details
+                              used on a specific day</span></div>
+                          <div class="qi">
+                            <div class="ap"><strong>Approach:</strong> Accept p_date as IN DATE. JOIN Driver_Car with
+                              Car WHERE TRUNC(usage_date) = TRUNC(p_date). Print car model, license, year, time.</div>
+                            <div class="tu"><span class="tul">Tags used:</span><span class="chip">PROCEDURE</span><span
+                                class="chip">IN DATE parameter</span><span class="chip">TRUNC()</span><span
+                                class="chip">JOIN</span><span class="chip">CURSOR FOR LOOP</span><span
+                                class="chip">DISTINCT</span></div>
+                            <pre><span class="k">CREATE OR REPLACE PROCEDURE</span> <span class="f">cars_on_day</span>(p_date <span class="k">IN DATE</span>) <span class="k">IS</span>
   <span class="k">CURSOR</span> c_cars <span class="k">IS</span>
     <span class="k">SELECT DISTINCT</span> c.license_no, c.model, c.year, dc.usage_time
       <span class="k">FROM</span> Car c
@@ -1679,18 +2375,27 @@ Football | Players: 11 | Coach: Igor Stimac</pre></div>
 <span class="k">END</span>;
 /
 <span class="k">EXEC</span> <span class="f">cars_on_day</span>(<span class="f">TO_DATE</span>(<span class="s">'15-JAN-2024'</span>,<span class="s">'DD-MON-YYYY'</span>));</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Cars used on: 15-JAN-24
+                            <div class="ob">
+                              <div class="ol">▶ Sample Output</div>
+                              <pre>Cars used on: 15-JAN-24
 MH12AB1234 | Swift Dzire | Year:2021 | Time:09:30
-MH14CD5678 | Honda City  | Year:2020 | Time:14:00</pre></div>
-  </div>
-</div>
+MH14CD5678 | Honda City  | Year:2020 | Time:14:00</pre>
+                            </div>
+                          </div>
+                        </div>
 
-<div class="qb">
-  <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display driver-wise car details in the year 2018</span></div>
-  <div class="qi">
-    <div class="ap"><strong>Approach:</strong> 3-table JOIN of Driver, Driver_Car, Car. Filter WHERE EXTRACT(YEAR FROM usage_date) = 2018. ORDER BY driver_id, print grouped headers.</div>
-    <div class="tu"><span class="tul">Tags used:</span><span class="chip">CURSOR</span><span class="chip">FOR LOOP</span><span class="chip">EXTRACT(YEAR FROM date)</span><span class="chip">3-table JOIN</span><span class="chip">ORDER BY</span><span class="chip">Change-break</span></div>
-    <pre><span class="k">DECLARE</span>
+                        <div class="qb">
+                          <div class="qh"><span class="badge cu">CURSOR</span><span class="qt">Display driver-wise car
+                              details in the year 2018</span></div>
+                          <div class="qi">
+                            <div class="ap"><strong>Approach:</strong> 3-table JOIN of Driver, Driver_Car, Car. Filter
+                              WHERE EXTRACT(YEAR FROM usage_date) = 2018. ORDER BY driver_id, print grouped headers.
+                            </div>
+                            <div class="tu"><span class="tul">Tags used:</span><span class="chip">CURSOR</span><span
+                                class="chip">FOR LOOP</span><span class="chip">EXTRACT(YEAR FROM date)</span><span
+                                class="chip">3-table JOIN</span><span class="chip">ORDER BY</span><span
+                                class="chip">Change-break</span></div>
+                            <pre><span class="k">DECLARE</span>
   <span class="k">CURSOR</span> c_2018 <span class="k">IS</span>
     <span class="k">SELECT</span> d.driver_id, d.driver_name,
            c.license_no, c.model, dc.usage_date, dc.usage_time
@@ -1715,22 +2420,26 @@ MH14CD5678 | Honda City  | Year:2020 | Time:14:00</pre></div>
   <span class="k">END LOOP</span>;
 <span class="k">END</span>;
 /</pre>
-    <div class="ob"><div class="ol">▶ Sample Output</div><pre>Driver-wise Car Usage in 2018:
+                            <div class="ob">
+                              <div class="ol">▶ Sample Output</div>
+                              <pre>Driver-wise Car Usage in 2018:
 === Driver: Ravi Shankar ===
   Car: Alto K10    | License: MH01AA0001 | Date: 05-MAR-18 | Time: 08:00
   Car: WagonR      | License: MH01BB0002 | Date: 20-JUL-18 | Time: 17:30
 === Driver: Suresh Naik ===
-  Car: Swift Dzire | License: MH02CC0003 | Date: 12-DEC-18 | Time: 10:00</pre></div>
-  </div>
-</div>
+  Car: Swift Dzire | License: MH02CC0003 | Date: 12-DEC-18 | Time: 10:00</pre>
+                            </div>
+                          </div>
+                        </div>
 
-  </div>
-</div>
+                      </div>
+                    </div>
 
-<footer>
-  RDBMS PL/SQL Complete Answer Book &nbsp;·&nbsp; Oracle SQL &nbsp;·&nbsp;
-  20 Slips &nbsp;·&nbsp; Functions · Procedures · Cursors · Triggers
-</footer>
-</div><!-- /container -->
+                    <footer>
+                      RDBMS PL/SQL Complete Answer Book &nbsp;·&nbsp; Oracle SQL &nbsp;·&nbsp;
+                      20 Slips &nbsp;·&nbsp; Functions · Procedures · Cursors · Triggers
+                    </footer>
+                  </div><!-- /container -->
 </body>
+
 </html>
